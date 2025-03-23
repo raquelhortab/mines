@@ -10,7 +10,10 @@ export default (options) => {
   const remainingMineCountListeners = [];
   const timerChangeListeners = [];
   const config = configuration(options);
-  const visibleField = field(config.dimensions, config.mine_count);
+  const additionalFieldOptions = {
+    initialState: options.initialState
+  };
+  const visibleField = field(config.dimensions, config.mine_count, additionalFieldOptions);
 
   let intervalToken = null;
   let state = gameStates.NOT_STARTED;
@@ -102,6 +105,7 @@ export default (options) => {
     cellState: (cell) => visibleField.cellState(cell),
     remainingMineCount: () => visibleField.remainingMineCount(),
     renderAsString: () => visibleField.renderAsString(),
-    started: () => timeStarted
+    started: () => timeStarted,
+    _visibleField: () => visibleField
   });
 };
