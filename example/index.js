@@ -67,4 +67,4 @@ var m = mines.create({
 // m.reveal([2, 10]);
 // m.mark([5, 12]);
 
-console.log(m._visibleField()._state());
+console.log(m.visibleField().state());

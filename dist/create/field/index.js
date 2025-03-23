@@ -20,6 +20,8 @@ var _renderAsString3 = _interopRequireDefault(_renderAsString2);
 
 var _lodash = require('lodash');
 
+var _object = require('lodash/object');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = function (dimensions, mineCount, opts) {
@@ -29,27 +31,27 @@ exports.default = function (dimensions, mineCount, opts) {
       row_count = _dimensions[0],
       column_count = _dimensions[1];
 
-  var state = additionalOptions.initialState || [];
+  var _state = additionalOptions.initialState || [];
   var mines = null;
-  var totalMines = mineCount;
+  var totalMines = mineCount || 0;
   var total_cells = row_count * column_count;
 
-  if (!additionalOptions.initialState) {
+  var updateState = function updateState() {
     (0, _lodash.times)(row_count, function (row_index) {
       var row = [];
-      state.push(row);
+      _state.push(row);
       (0, _lodash.times)(column_count, function (column_index) {
         row.push(_cellStates2.default.UNKNOWN);
       });
     });
-  }
+  };
 
   var marked = function marked(_ref) {
     var _ref2 = _slicedToArray(_ref, 2),
         row = _ref2[0],
         column = _ref2[1];
 
-    return state[row][column] === _cellStates2.default.MARKED;
+    return _state[row][column] === _cellStates2.default.MARKED;
   };
 
   var markedOrQuestioned = function markedOrQuestioned(_ref3) {
@@ -57,7 +59,7 @@ exports.default = function (dimensions, mineCount, opts) {
         row = _ref4[0],
         column = _ref4[1];
 
-    return state[row][column] === _cellStates2.default.MARKED || state[row][column] === _cellStates2.default.QUESTION;
+    return _state[row][column] === _cellStates2.default.MARKED || _state[row][column] === _cellStates2.default.QUESTION;
   };
 
   var outOfBounds = function outOfBounds(_ref5) {
@@ -91,7 +93,7 @@ exports.default = function (dimensions, mineCount, opts) {
         row = _ref8[0],
         column = _ref8[1];
 
-    return state[row][column];
+    return _state[row][column];
   };
 
   var revealed = function revealed(_ref9) {
@@ -100,23 +102,26 @@ exports.default = function (dimensions, mineCount, opts) {
         column = _ref10[1];
 
     return (0, _lodash.some)((0, _lodash.range)(9), function (number) {
-      return state[row][column] === _cellStates2.default[number];
+      return _state[row][column] === _cellStates2.default[number];
     });
   };
 
   var notifyListeners = function notifyListeners(listeners, cell, state, previous_state) {
     return (0, _lodash.map)(listeners, function (cb) {
-      cb(cell, state, previous_state);
+      if (cb) {
+        return cb(cell, state, previous_state);
+      }
     });
   };
 
-  var reset = function reset(listeners) {
+  var reset = function reset(listeners, opts) {
     mines = null;
+    if (opts && opts.mine_count !== undefined) totalMines = opts.mine_count;
     (0, _lodash.times)(row_count, function (row) {
       (0, _lodash.times)(column_count, function (col) {
-        var previousState = state[row][col];
-        state[row][col] = _cellStates2.default.UNKNOWN;
-        notifyListeners(listeners, [row, col], state[row][col], previousState);
+        var previousState = _state[row][col];
+        _state[row][col] = _cellStates2.default.UNKNOWN;
+        notifyListeners(listeners, [row, col], _state[row][col], previousState);
       });
     });
   };
@@ -126,8 +131,8 @@ exports.default = function (dimensions, mineCount, opts) {
         row = _ref12[0],
         column = _ref12[1];
 
-    var previous_state = state[row][column];
-    state[row][column] = new_state;
+    var previous_state = _state[row][column];
+    _state[row][column] = new_state;
     notifyListeners(listeners, [row, column], new_state, previous_state);
   };
 
@@ -228,27 +233,84 @@ exports.default = function (dimensions, mineCount, opts) {
     return new_state;
   };
 
+  var publicState = function publicState() {
+    var copy = [];
+    (0, _lodash.times)(row_count, function (row_index) {
+      var row = [];
+      copy.push(row);
+      (0, _lodash.times)(column_count, function (column_index) {
+        row.push(_state[row_index][column_index] === _cellStates2.default.MINE ? _cellStates2.default.UNKNOWN : _state[row_index][column_index]);
+      });
+    });
+    return copy;
+  };
+
+  var toggleMine = function toggleMine(_ref13, listeners) {
+    var _ref14 = _slicedToArray(_ref13, 2),
+        row = _ref14[0],
+        column = _ref14[1];
+
+    if (isMine([row, column])) {
+      mines = mines.filter(function (coord) {
+        return !(0, _lodash.isEqual)([row, column], coord);
+      });
+      totalMines = mines.length;
+      setCellState([row, column], _cellStates2.default.UNKNOWN, listeners);
+    } else {
+      mines.push([row, column]);
+      totalMines = mines.length;
+      setCellState([row, column], _cellStates2.default.MINE, listeners);
+    }
+    return true;
+  };
+
+  var setState = function setState(newState, listeners) {
+    (0, _lodash.times)(row_count, function (row_index) {
+      (0, _lodash.times)(column_count, function (column_index) {
+        setCellState([row_index, column_index], newState[row_index][column_index], listeners);
+      });
+    });
+  };
+
   // mines is an array of positions [row, col]
-  var placeMines = function placeMines(m) {
-    if (m.length !== totalMines) {
+  var placeMines = function placeMines(m, opts) {
+    console.log('placeMines');
+    var options = opts || {};
+    var updateCount = options.updateCount || false;
+    var showMines = options.showMines || false;
+    console.log('m', m);
+    if (m.length !== totalMines && !updateCount) {
       throw Error('The number of mines being placed does not match config');
     }
     mines = m;
+    if (updateCount) totalMines = mines.length;
+    if (showMines) {
+      mines.forEach(function (m) {
+        setCellState(m, _cellStates2.default.MINE, opts.listeners);
+      });
+    }
   };
 
   var allCellsWithoutMinesRevealed = function allCellsWithoutMinesRevealed() {
     return revealedCells() === total_cells - totalMines;
   };
 
-  return { placeMines: placeMines, remainingMineCount: remainingMineCount, cellState: cellState, reveal: reveal, mark: mark, chord: chord, revealed: revealed, allCellsWithoutMinesRevealed: allCellsWithoutMinesRevealed, reset: reset,
+  if (!additionalOptions.initialState) {
+    updateState();
+  }
+
+  return { placeMines: placeMines, remainingMineCount: remainingMineCount, cellState: cellState, reveal: reveal, mark: mark, chord: chord, revealed: revealed, allCellsWithoutMinesRevealed: allCellsWithoutMinesRevealed, reset: reset, toggleMine: toggleMine, publicState: publicState, setState: setState,
     minesPlaced: function minesPlaced() {
       return !(0, _lodash.isNil)(mines);
     },
     renderAsString: function renderAsString() {
-      return (0, _renderAsString3.default)(state);
+      return (0, _renderAsString3.default)(_state);
     },
-    _state: function _state() {
-      return state;
+    state: function state() {
+      return _state;
+    },
+    getMines: function getMines() {
+      return mines;
     }
   };
 };

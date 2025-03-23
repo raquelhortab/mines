@@ -2,16 +2,18 @@ import cellStates from '../../cellStates';
 import cellNeighbours from './cellNeighbours';
 import renderAsString from './renderAsString';
 import {times, isNil, isEqual, filter, some, map, range, each} from 'lodash';
+import CellStates from "../../cellStates";
+import {update} from "lodash/object";
 
 export default (dimensions, mineCount, opts) => {
   let additionalOptions = opts || {};
   const [row_count, column_count] = dimensions;
-  const state = additionalOptions.initialState || [];
+  let state = additionalOptions.initialState || [];
   let mines = null;
-  const totalMines = mineCount;
+  let totalMines = mineCount || 0;
   const total_cells = row_count * column_count;
 
-  if (!additionalOptions.initialState) {
+  const updateState = () => {
     times(row_count, (row_index) => {
       const row = [];
       state.push(row);
@@ -19,7 +21,7 @@ export default (dimensions, mineCount, opts) => {
         row.push(cellStates.UNKNOWN);
       });
     });
-  }
+  };
 
   const marked = ([row, column]) => {
     return state[row][column] === cellStates.MARKED;
@@ -33,7 +35,9 @@ export default (dimensions, mineCount, opts) => {
     return (row < 0 || row > (row_count - 1) || column < 0 || column > (column_count - 1));
   };
 
-  const isMine = (cell) => some(mines, (mine) => isEqual(cell, mine));
+  const isMine = (cell) => {
+    return some(mines, (mine) => isEqual(cell, mine));
+  };
 
   const neighbouringMines = (neighbours) => filter(neighbours, (neighbour) => isMine(neighbour));
 
@@ -43,10 +47,11 @@ export default (dimensions, mineCount, opts) => {
 
   const revealed = ([row, column]) => some(range(9), (number) => state[row][column] === cellStates[number]);
 
-  const notifyListeners = (listeners, cell, state, previous_state) => map(listeners, (cb) => { cb(cell, state, previous_state); });
+  const notifyListeners = (listeners, cell, state, previous_state) => map(listeners, (cb) => { if (cb) { return cb(cell, state, previous_state); } });
 
-  const reset = (listeners) => {
+  const reset = (listeners, opts) => {
     mines = null;
+    if (opts && opts.mine_count !== undefined) totalMines = opts.mine_count;
     times(row_count, (row) => {
       times(column_count, (col) => {
         const previousState = state[row][col];
@@ -155,19 +160,68 @@ export default (dimensions, mineCount, opts) => {
     return new_state;
   };
 
+  const publicState = () => {
+    let copy = [];
+    times(row_count, (row_index) => {
+      const row = [];
+      copy.push(row);
+      times(column_count, (column_index) => {
+        row.push(state[row_index][column_index] === cellStates.MINE ? cellStates.UNKNOWN : state[row_index][column_index]);
+      });
+    });
+    return copy;
+  };
+
+  const toggleMine = ([row, column], listeners) => {
+    if (isMine([row, column])) {
+      mines = mines.filter((coord) => !isEqual([row, column], coord));
+      totalMines = mines.length;
+      setCellState([row, column], CellStates.UNKNOWN, listeners);
+    } else {
+      mines.push([row, column]);
+      totalMines = mines.length;
+      setCellState([row, column], CellStates.MINE, listeners);
+    }
+    return true;
+  };
+
+  const setState = (newState, listeners) => {
+    times(row_count, (row_index) => {
+      times(column_count, (column_index) => {
+        setCellState([row_index, column_index], newState[row_index][column_index], listeners);
+      });
+    });
+  };
+
   // mines is an array of positions [row, col]
-  const placeMines = (m) => {
-    if (m.length !== totalMines) {
+  const placeMines = (m, opts) => {
+    console.log('placeMines');
+    let options = opts || {};
+    const updateCount = options.updateCount || false;
+    const showMines = options.showMines || false;
+    console.log('m', m);
+    if (m.length !== totalMines && !updateCount) {
       throw Error('The number of mines being placed does not match config');
     }
     mines = m;
+    if (updateCount) totalMines = mines.length;
+    if (showMines) {
+      mines.forEach((m) => {
+        setCellState(m, cellStates.MINE, opts.listeners);
+      });
+    }
   };
 
   const allCellsWithoutMinesRevealed = () => revealedCells() === (total_cells - totalMines);
 
-  return { placeMines, remainingMineCount, cellState, reveal, mark, chord, revealed, allCellsWithoutMinesRevealed, reset,
+  if (!additionalOptions.initialState) {
+    updateState();
+  }
+
+  return { placeMines, remainingMineCount, cellState, reveal, mark, chord, revealed, allCellsWithoutMinesRevealed, reset, toggleMine, publicState, setState,
     minesPlaced: () => !isNil(mines),
     renderAsString: () => renderAsString(state),
-    _state: () => state
+    state: () => state,
+    getMines: () => mines
   };
 };

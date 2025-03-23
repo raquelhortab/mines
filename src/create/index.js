@@ -3,6 +3,8 @@ import field from './field';
 import gameStates from '../gameStates';
 import randomlyPlaceMines from './randomlyPlaceMines';
 import {assign, map} from 'lodash';
+import { createDecipheriv, createCipheriv } from 'crypto';
+import { Buffer } from 'buffer';
 
 export default (options) => {
   const gameStateChangeListeners = [];
@@ -10,6 +12,9 @@ export default (options) => {
   const remainingMineCountListeners = [];
   const timerChangeListeners = [];
   const config = configuration(options);
+  console.log('create config options', options);
+  console.log('create config editable', config.editable);
+  console.log('create config mine_count', config.mine_count);
   const additionalFieldOptions = {
     initialState: options.initialState
   };
@@ -33,6 +38,53 @@ export default (options) => {
   const notifyRemainingMineCountListeners = notifyListeners.bind(null, remainingMineCountListeners);
   const notifyTimerChangeListeners = notifyListeners.bind(null, timerChangeListeners);
 
+  const decrypt = (encryptedData) => {
+
+    const key = Buffer.from("1234567890abcdef1234567890abcdef"); // 32-byte key
+    const iv = Buffer.from("abcdef1234567890"); // 16-byte IV
+
+    const encryptedBuffer = Buffer.from(encryptedData, 'base64');
+
+    const decipher = createDecipheriv("aes-256-cbc", key, iv);
+    let decrypted = decipher.update(encryptedBuffer);
+    decrypted = Buffer.concat([decrypted, decipher.final()]);
+
+    return decrypted.toString();
+  };
+
+  const encrypt = (data) => {
+    const key = Buffer.from("1234567890abcdef1234567890abcdef"); // 32-byte key
+    const iv = Buffer.from("abcdef1234567890"); // 16-byte IV
+
+    const cipher = createCipheriv("aes-256-cbc", key, iv);
+    let encrypted = cipher.update(data, "utf-8");
+    encrypted = Buffer.concat([encrypted, cipher.final()]);
+
+    return encrypted.toString("base64"); // Base64 encode for safe transfer
+  };
+
+  const loadFieldData = (_data, encrypted) => {
+    const data = encrypted ? JSON.parse(decrypt(_data)) : _data;
+    const previous_state = state;
+    const previousRemainingMines = visibleField.remainingMineCount();
+    if (data.state) {
+      visibleField.setState(data.state, cellStateChangeListeners);
+    }
+    if (data.mines) {
+      visibleField.placeMines(data.mines, {updateCount: true, showMines: !encrypted, listeners: cellStateChangeListeners});
+      config.mine_count = data.mines.length;
+    }
+    notifyGameStateChangeListeners(state, previous_state);
+    notifyRemainingMineCountListeners(visibleField.remainingMineCount(), previousRemainingMines);
+  };
+
+  const getFieldData = () => {
+    return {
+      mines: visibleField.getMines(),
+      state: visibleField.publicState()
+    };
+  };
+
   const reset = () => {
     const previousElapsedTime = elapsedTime;
     const previousState = state;
@@ -40,7 +92,8 @@ export default (options) => {
     state = gameStates.NOT_STARTED;
     timeStarted = null;
     elapsedTime = 0;
-    visibleField.reset(cellStateChangeListeners);
+    const opts = config.editable ? {mine_count: 0} : {};
+    visibleField.reset(cellStateChangeListeners, opts);
     if (intervalToken) {
       global.clearInterval(intervalToken);
       intervalToken = null;
@@ -71,6 +124,7 @@ export default (options) => {
     if (!visibleField.minesPlaced()) {
       visibleField.placeMines(config.mines || randomlyPlaceMines(config, row, column));
       startTimer();
+    } else {
     }
   };
 
@@ -100,12 +154,28 @@ export default (options) => {
     return state;
   };
 
-  return assign(config, {finished, mark, chord, reveal, onGameStateChange, onCellStateChange, onRemainingMineCountChange, onTimerChange, reset,
+  const toggleMine = (cell) => {
+    if (!config.editable) return false;
+    if (finished() || outOfBounds(cell)) return false;
+    ensureMinesHaveBeenPlaced(cell);
+    const previous_state = state;
+    const previousRemainingMines = visibleField.remainingMineCount();
+    if (visibleField.toggleMine(cell, cellStateChangeListeners)) {
+      notifyGameStateChangeListeners(state, previous_state);
+      notifyRemainingMineCountListeners(visibleField.remainingMineCount(), previousRemainingMines);
+      return true;
+    }
+    return false;
+  };
+
+  return assign(config, {finished, mark, chord, reveal, onGameStateChange, onCellStateChange, onRemainingMineCountChange, onTimerChange,
+    reset, toggleMine, loadFieldData, getFieldData, encrypt,
     state: () => state,
     cellState: (cell) => visibleField.cellState(cell),
     remainingMineCount: () => visibleField.remainingMineCount(),
     renderAsString: () => visibleField.renderAsString(),
     started: () => timeStarted,
-    _visibleField: () => visibleField
+    editable: () => config.editable,
+    visibleField: () => visibleField
   });
 };
