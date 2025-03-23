@@ -100,12 +100,18 @@ export default (options) => {
     return state;
   };
 
-  return assign(config, {finished, mark, chord, reveal, onGameStateChange, onCellStateChange, onRemainingMineCountChange, onTimerChange, reset,
+  const addMine = (cell) => {
+    if (finished() || outOfBounds(cell)) return false;
+    visibleField.addMine(cell);
+    return true;
+  };
+
+  return assign(config, {finished, mark, chord, reveal, onGameStateChange, onCellStateChange, onRemainingMineCountChange, onTimerChange, reset, addMine,
     state: () => state,
     cellState: (cell) => visibleField.cellState(cell),
     remainingMineCount: () => visibleField.remainingMineCount(),
     renderAsString: () => visibleField.renderAsString(),
     started: () => timeStarted,
-    _visibleField: () => visibleField
+    visibleField: () => visibleField,
   });
 };

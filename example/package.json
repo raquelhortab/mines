@@ -11,6 +11,6 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "mines": "git+ssh://git@github.com/raquelhortab/mines.git"
+    "mines": "git+ssh://git@github.com/raquelhortab/mines.git#master"
   }
 }

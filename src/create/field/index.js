@@ -35,6 +35,12 @@ export default (dimensions, mineCount, opts) => {
 
   const isMine = (cell) => some(mines, (mine) => isEqual(cell, mine));
 
+  const addMine = ([row, column]) => {
+    if (!isMine(row, column)) {
+      mines.push([row, column]);
+    }
+  }
+
   const neighbouringMines = (neighbours) => filter(neighbours, (neighbour) => isMine(neighbour));
 
   const neighbouringMarkedCells = (neighbours) => filter(neighbours, (neighbour) => marked(neighbour));
@@ -168,6 +174,7 @@ export default (dimensions, mineCount, opts) => {
   return { placeMines, remainingMineCount, cellState, reveal, mark, chord, revealed, allCellsWithoutMinesRevealed, reset,
     minesPlaced: () => !isNil(mines),
     renderAsString: () => renderAsString(state),
-    _state: () => state
+    state: () => state,
+    addMine: () => addMine
   };
 };

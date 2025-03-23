@@ -35,7 +35,7 @@ exports.default = function (options) {
   var additionalFieldOptions = {
     initialState: options.initialState
   };
-  var visibleField = (0, _field2.default)(config.dimensions, config.mine_count, additionalFieldOptions);
+  var _visibleField = (0, _field2.default)(config.dimensions, config.mine_count, additionalFieldOptions);
 
   var intervalToken = null;
   var _state = _gameStates2.default.NOT_STARTED;
@@ -70,18 +70,18 @@ exports.default = function (options) {
   var reset = function reset() {
     var previousElapsedTime = elapsedTime;
     var previousState = _state;
-    var previousRemainingMines = visibleField.remainingMineCount();
+    var previousRemainingMines = _visibleField.remainingMineCount();
     _state = _gameStates2.default.NOT_STARTED;
     timeStarted = null;
     elapsedTime = 0;
-    visibleField.reset(cellStateChangeListeners);
+    _visibleField.reset(cellStateChangeListeners);
     if (intervalToken) {
       global.clearInterval(intervalToken);
       intervalToken = null;
     }
     notifyTimerChangeListeners(elapsedTime, previousElapsedTime);
     notifyGameStateChangeListeners(_state, previousState);
-    notifyRemainingMineCountListeners(visibleField.remainingMineCount(), previousRemainingMines);
+    notifyRemainingMineCountListeners(_visibleField.remainingMineCount(), previousRemainingMines);
   };
 
   var onGameStateChange = appendListener.bind(null, gameStateChangeListeners);
@@ -108,8 +108,8 @@ exports.default = function (options) {
         row = _ref4[0],
         column = _ref4[1];
 
-    if (!visibleField.minesPlaced()) {
-      visibleField.placeMines(config.mines || (0, _randomlyPlaceMines2.default)(config, row, column));
+    if (!_visibleField.minesPlaced()) {
+      _visibleField.placeMines(config.mines || (0, _randomlyPlaceMines2.default)(config, row, column));
       startTimer();
     }
   };
@@ -121,47 +121,53 @@ exports.default = function (options) {
     if (fieldMethod(cell, cellStateChangeListeners)) {
       _state = _gameStates2.default.LOST;
     } else {
-      _state = visibleField.allCellsWithoutMinesRevealed() ? _gameStates2.default.WON : _gameStates2.default.STARTED;
+      _state = _visibleField.allCellsWithoutMinesRevealed() ? _gameStates2.default.WON : _gameStates2.default.STARTED;
     }
     notifyGameStateChangeListeners(_state, previous_state);
     return _state;
   };
 
   var reveal = function reveal(cell) {
-    return changecellStatesWith(visibleField.reveal, cell);
+    return changecellStatesWith(_visibleField.reveal, cell);
   };
   var chord = function chord(cell) {
-    return changecellStatesWith(visibleField.chord, cell);
+    return changecellStatesWith(_visibleField.chord, cell);
   };
 
   var mark = function mark(cell) {
     if (finished() || outOfBounds(cell)) return _state;
     var previous_state = _state;
-    var previousRemainingMines = visibleField.remainingMineCount();
-    visibleField.mark(cell, cellStateChangeListeners);
+    var previousRemainingMines = _visibleField.remainingMineCount();
+    _visibleField.mark(cell, cellStateChangeListeners);
     notifyGameStateChangeListeners(_state, previous_state);
-    notifyRemainingMineCountListeners(visibleField.remainingMineCount(), previousRemainingMines);
+    notifyRemainingMineCountListeners(_visibleField.remainingMineCount(), previousRemainingMines);
     return _state;
   };
 
-  return (0, _lodash.assign)(config, { finished: finished, mark: mark, chord: chord, reveal: reveal, onGameStateChange: onGameStateChange, onCellStateChange: onCellStateChange, onRemainingMineCountChange: onRemainingMineCountChange, onTimerChange: onTimerChange, reset: reset,
+  var addMine = function addMine(cell) {
+    if (finished() || outOfBounds(cell)) return false;
+    _visibleField.addMine(cell);
+    return true;
+  };
+
+  return (0, _lodash.assign)(config, { finished: finished, mark: mark, chord: chord, reveal: reveal, onGameStateChange: onGameStateChange, onCellStateChange: onCellStateChange, onRemainingMineCountChange: onRemainingMineCountChange, onTimerChange: onTimerChange, reset: reset, addMine: addMine,
     state: function state() {
       return _state;
     },
     cellState: function cellState(cell) {
-      return visibleField.cellState(cell);
+      return _visibleField.cellState(cell);
     },
     remainingMineCount: function remainingMineCount() {
-      return visibleField.remainingMineCount();
+      return _visibleField.remainingMineCount();
     },
     renderAsString: function renderAsString() {
-      return visibleField.renderAsString();
+      return _visibleField.renderAsString();
     },
     started: function started() {
       return timeStarted;
     },
-    _visibleField: function _visibleField() {
-      return visibleField;
+    visibleField: function visibleField() {
+      return _visibleField;
     }
   });
 };

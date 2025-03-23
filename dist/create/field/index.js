@@ -29,7 +29,7 @@ exports.default = function (dimensions, mineCount, opts) {
       row_count = _dimensions[0],
       column_count = _dimensions[1];
 
-  var state = additionalOptions.initialState || [];
+  var _state = additionalOptions.initialState || [];
   var mines = null;
   var totalMines = mineCount;
   var total_cells = row_count * column_count;
@@ -37,7 +37,7 @@ exports.default = function (dimensions, mineCount, opts) {
   if (!additionalOptions.initialState) {
     (0, _lodash.times)(row_count, function (row_index) {
       var row = [];
-      state.push(row);
+      _state.push(row);
       (0, _lodash.times)(column_count, function (column_index) {
         row.push(_cellStates2.default.UNKNOWN);
       });
@@ -49,7 +49,7 @@ exports.default = function (dimensions, mineCount, opts) {
         row = _ref2[0],
         column = _ref2[1];
 
-    return state[row][column] === _cellStates2.default.MARKED;
+    return _state[row][column] === _cellStates2.default.MARKED;
   };
 
   var markedOrQuestioned = function markedOrQuestioned(_ref3) {
@@ -57,7 +57,7 @@ exports.default = function (dimensions, mineCount, opts) {
         row = _ref4[0],
         column = _ref4[1];
 
-    return state[row][column] === _cellStates2.default.MARKED || state[row][column] === _cellStates2.default.QUESTION;
+    return _state[row][column] === _cellStates2.default.MARKED || _state[row][column] === _cellStates2.default.QUESTION;
   };
 
   var outOfBounds = function outOfBounds(_ref5) {
@@ -74,6 +74,16 @@ exports.default = function (dimensions, mineCount, opts) {
     });
   };
 
+  var _addMine = function _addMine(_ref7) {
+    var _ref8 = _slicedToArray(_ref7, 2),
+        row = _ref8[0],
+        column = _ref8[1];
+
+    if (!isMine(row, column)) {
+      mines.push([row, column]);
+    }
+  };
+
   var neighbouringMines = function neighbouringMines(neighbours) {
     return (0, _lodash.filter)(neighbours, function (neighbour) {
       return isMine(neighbour);
@@ -86,21 +96,21 @@ exports.default = function (dimensions, mineCount, opts) {
     });
   };
 
-  var cellState = function cellState(_ref7) {
-    var _ref8 = _slicedToArray(_ref7, 2),
-        row = _ref8[0],
-        column = _ref8[1];
-
-    return state[row][column];
-  };
-
-  var revealed = function revealed(_ref9) {
+  var cellState = function cellState(_ref9) {
     var _ref10 = _slicedToArray(_ref9, 2),
         row = _ref10[0],
         column = _ref10[1];
 
+    return _state[row][column];
+  };
+
+  var revealed = function revealed(_ref11) {
+    var _ref12 = _slicedToArray(_ref11, 2),
+        row = _ref12[0],
+        column = _ref12[1];
+
     return (0, _lodash.some)((0, _lodash.range)(9), function (number) {
-      return state[row][column] === _cellStates2.default[number];
+      return _state[row][column] === _cellStates2.default[number];
     });
   };
 
@@ -114,20 +124,20 @@ exports.default = function (dimensions, mineCount, opts) {
     mines = null;
     (0, _lodash.times)(row_count, function (row) {
       (0, _lodash.times)(column_count, function (col) {
-        var previousState = state[row][col];
-        state[row][col] = _cellStates2.default.UNKNOWN;
-        notifyListeners(listeners, [row, col], state[row][col], previousState);
+        var previousState = _state[row][col];
+        _state[row][col] = _cellStates2.default.UNKNOWN;
+        notifyListeners(listeners, [row, col], _state[row][col], previousState);
       });
     });
   };
 
-  var setCellState = function setCellState(_ref11, new_state, listeners) {
-    var _ref12 = _slicedToArray(_ref11, 2),
-        row = _ref12[0],
-        column = _ref12[1];
+  var setCellState = function setCellState(_ref13, new_state, listeners) {
+    var _ref14 = _slicedToArray(_ref13, 2),
+        row = _ref14[0],
+        column = _ref14[1];
 
-    var previous_state = state[row][column];
-    state[row][column] = new_state;
+    var previous_state = _state[row][column];
+    _state[row][column] = new_state;
     notifyListeners(listeners, [row, column], new_state, previous_state);
   };
 
@@ -245,10 +255,13 @@ exports.default = function (dimensions, mineCount, opts) {
       return !(0, _lodash.isNil)(mines);
     },
     renderAsString: function renderAsString() {
-      return (0, _renderAsString3.default)(state);
+      return (0, _renderAsString3.default)(_state);
     },
-    _state: function _state() {
-      return state;
+    state: function state() {
+      return _state;
+    },
+    addMine: function addMine() {
+      return _addMine;
     }
   };
 };
