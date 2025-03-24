@@ -104,10 +104,11 @@ export default (options) => {
   const addMine = (cell) => {
     if (!config.editable) return false;
     if (finished() || outOfBounds(cell)) return false;
+    ensureMinesHaveBeenPlaced(cell);
     const previous_state = state;
     const previousRemainingMines = visibleField.remainingMineCount();
-    ensureMinesHaveBeenPlaced(cell);
     if (visibleField.addMine(cell, cellStateChangeListeners)) {
+      console.log('game.addmine');
       notifyGameStateChangeListeners(state, previous_state);
       notifyRemainingMineCountListeners(visibleField.remainingMineCount(), previousRemainingMines);
       return true;
