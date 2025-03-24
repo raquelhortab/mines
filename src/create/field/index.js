@@ -162,15 +162,11 @@ export default (dimensions, mineCount, opts) => {
 
   const toggleMine = ([row, column], listeners) => {
     if (isMine([row, column])) {
-      console.log('toggleMine true');
       mines = mines.filter((coord) => !isEqual([row, column], coord));
       totalMines = mines.length;
       setCellState([row, column], CellStates.UNKNOWN, listeners);
     } else {
-      console.log('toggleMine false');
       mines.push([row, column]);
-      console.log(mines);
-      console.log('ismine', isMine([row, column]));
       totalMines = mines.length;
       setCellState([row, column], CellStates.MINE, listeners);
     }
