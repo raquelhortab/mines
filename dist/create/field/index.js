@@ -30,7 +30,7 @@ exports.default = function (dimensions, mineCount, opts) {
       column_count = _dimensions[1];
 
   var _state = additionalOptions.initialState || [];
-  var mines = null;
+  var _mines = null;
   var totalMines = mineCount;
   var total_cells = row_count * column_count;
 
@@ -69,7 +69,7 @@ exports.default = function (dimensions, mineCount, opts) {
   };
 
   var isMine = function isMine(cell) {
-    return (0, _lodash.some)(mines, function (mine) {
+    return (0, _lodash.some)(_mines, function (mine) {
       return (0, _lodash.isEqual)(cell, mine);
     });
   };
@@ -80,7 +80,7 @@ exports.default = function (dimensions, mineCount, opts) {
         column = _ref8[1];
 
     if (!isMine(row, column)) {
-      mines.push([row, column]);
+      _mines.push([row, column]);
     }
   };
 
@@ -121,7 +121,7 @@ exports.default = function (dimensions, mineCount, opts) {
   };
 
   var reset = function reset(listeners) {
-    mines = null;
+    _mines = null;
     (0, _lodash.times)(row_count, function (row) {
       (0, _lodash.times)(column_count, function (col) {
         var previousState = _state[row][col];
@@ -153,7 +153,7 @@ exports.default = function (dimensions, mineCount, opts) {
   };
 
   var revealUnmarkedMines = function revealUnmarkedMines(listeners) {
-    (0, _lodash.map)(mines, function (mine) {
+    (0, _lodash.map)(_mines, function (mine) {
       if (cellState(mine) === _cellStates2.default.UNKNOWN) setCellState(mine, _cellStates2.default.MINE, listeners);
     });
   };
@@ -243,7 +243,7 @@ exports.default = function (dimensions, mineCount, opts) {
     if (m.length !== totalMines) {
       throw Error('The number of mines being placed does not match config');
     }
-    mines = m;
+    _mines = m;
   };
 
   var allCellsWithoutMinesRevealed = function allCellsWithoutMinesRevealed() {
@@ -252,7 +252,7 @@ exports.default = function (dimensions, mineCount, opts) {
 
   return { placeMines: placeMines, remainingMineCount: remainingMineCount, cellState: cellState, reveal: reveal, mark: mark, chord: chord, revealed: revealed, allCellsWithoutMinesRevealed: allCellsWithoutMinesRevealed, reset: reset,
     minesPlaced: function minesPlaced() {
-      return !(0, _lodash.isNil)(mines);
+      return !(0, _lodash.isNil)(_mines);
     },
     renderAsString: function renderAsString() {
       return (0, _renderAsString3.default)(_state);
@@ -262,6 +262,9 @@ exports.default = function (dimensions, mineCount, opts) {
     },
     addMine: function addMine() {
       return _addMine;
+    },
+    mines: function mines() {
+      return _mines;
     }
   };
 };
