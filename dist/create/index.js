@@ -146,8 +146,7 @@ exports.default = function (options) {
 
   var addMine = function addMine(cell) {
     if (finished() || outOfBounds(cell)) return false;
-    _visibleField.addMine(cell);
-    return true;
+    return _visibleField.addMine(cell);
   };
 
   return (0, _lodash.assign)(config, { finished: finished, mark: mark, chord: chord, reveal: reveal, onGameStateChange: onGameStateChange, onCellStateChange: onCellStateChange, onRemainingMineCountChange: onRemainingMineCountChange, onTimerChange: onTimerChange, reset: reset, addMine: addMine,
