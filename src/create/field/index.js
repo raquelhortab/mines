@@ -178,6 +178,6 @@ export default (dimensions, mineCount, opts) => {
     minesPlaced: () => !isNil(mines),
     renderAsString: () => renderAsString(state),
     state: () => state,
-    mines: () => mines
+    getMines: () => mines
   };
 };
