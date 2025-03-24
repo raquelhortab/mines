@@ -234,12 +234,14 @@ exports.default = function (dimensions, mineCount, opts) {
         column = _ref14[1];
 
     if (isMine(row, column)) {
+      console.log('toggleMine true');
       mines = mines.filter(function (coord) {
         return !(coord[0] === row && coord[1] === column);
       });
       totalMines = mines.length;
       setCellState([row, column], _cellStates2.default.UNKNOWN, listeners);
     } else {
+      console.log('toggleMine false');
       mines.push([row, column]);
       totalMines = mines.length;
       setCellState([row, column], _cellStates2.default.MINE, listeners);
