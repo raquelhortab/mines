@@ -36,6 +36,7 @@ export default (dimensions, mineCount, opts) => {
   const isMine = (cell) => some(mines, (mine) => isEqual(cell, mine));
 
   const addMine = ([row, column]) => {
+    console.log('Attempting to add mine at:', row, column, 'Current mines:', mines);
     if (!isMine(row, column)) {
       mines.push([row, column]);
       totalMines = mines.length;

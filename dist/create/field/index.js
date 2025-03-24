@@ -79,6 +79,7 @@ exports.default = function (dimensions, mineCount, opts) {
         row = _ref8[0],
         column = _ref8[1];
 
+    console.log('Attempting to add mine at:', row, column, 'Current mines:', mines);
     if (!isMine(row, column)) {
       mines.push([row, column]);
       totalMines = mines.length;
