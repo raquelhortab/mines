@@ -228,18 +228,23 @@ exports.default = function (dimensions, mineCount, opts) {
     return new_state;
   };
 
-  var addMine = function addMine(_ref13, listeners) {
+  var toggleMine = function toggleMine(_ref13, listeners) {
     var _ref14 = _slicedToArray(_ref13, 2),
         row = _ref14[0],
         column = _ref14[1];
 
-    if (!isMine(row, column)) {
+    if (isMine(row, column)) {
+      mines = mines.filter(function (coord) {
+        return !(coord[0] === row && coord[1] === column);
+      });
+      totalMines = mines.length;
+      setCellState([row, column], _cellStates2.default.UNKNOWN, listeners);
+    } else {
       mines.push([row, column]);
       totalMines = mines.length;
       setCellState([row, column], _cellStates2.default.MINE, listeners);
-      return true;
     }
-    return false;
+    return true;
   };
 
   // mines is an array of positions [row, col]
@@ -254,7 +259,7 @@ exports.default = function (dimensions, mineCount, opts) {
     return revealedCells() === total_cells - totalMines;
   };
 
-  return { placeMines: placeMines, remainingMineCount: remainingMineCount, cellState: cellState, reveal: reveal, mark: mark, chord: chord, revealed: revealed, allCellsWithoutMinesRevealed: allCellsWithoutMinesRevealed, reset: reset, addMine: addMine,
+  return { placeMines: placeMines, remainingMineCount: remainingMineCount, cellState: cellState, reveal: reveal, mark: mark, chord: chord, revealed: revealed, allCellsWithoutMinesRevealed: allCellsWithoutMinesRevealed, reset: reset, toggleMine: toggleMine,
     minesPlaced: function minesPlaced() {
       return !(0, _lodash.isNil)(mines);
     },

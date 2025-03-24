@@ -156,14 +156,17 @@ export default (dimensions, mineCount, opts) => {
     return new_state;
   };
 
-  const addMine = ([row, column], listeners) => {
-    if (!isMine(row, column)) {
+  const toggleMine = ([row, column], listeners) => {
+    if (isMine(row, column)) {
+      mines = mines.filter((coord) => !(coord[0] === row && coord[1] === column));
+      totalMines = mines.length;
+      setCellState([row, column], CellStates.UNKNOWN, listeners);
+    } else {
       mines.push([row, column]);
       totalMines = mines.length;
       setCellState([row, column], CellStates.MINE, listeners);
-      return true;
     }
-    return false;
+    return true;
   };
 
   // mines is an array of positions [row, col]
@@ -176,7 +179,7 @@ export default (dimensions, mineCount, opts) => {
 
   const allCellsWithoutMinesRevealed = () => revealedCells() === (total_cells - totalMines);
 
-  return { placeMines, remainingMineCount, cellState, reveal, mark, chord, revealed, allCellsWithoutMinesRevealed, reset, addMine,
+  return { placeMines, remainingMineCount, cellState, reveal, mark, chord, revealed, allCellsWithoutMinesRevealed, reset, toggleMine,
     minesPlaced: () => !isNil(mines),
     renderAsString: () => renderAsString(state),
     state: () => state,

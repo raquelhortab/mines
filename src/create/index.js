@@ -101,14 +101,13 @@ export default (options) => {
     return state;
   };
 
-  const addMine = (cell) => {
+  const toggleMine = (cell) => {
     if (!config.editable) return false;
     if (finished() || outOfBounds(cell)) return false;
     ensureMinesHaveBeenPlaced(cell);
     const previous_state = state;
     const previousRemainingMines = visibleField.remainingMineCount();
-    if (visibleField.addMine(cell, cellStateChangeListeners)) {
-      console.log('game.addmine');
+    if (visibleField.toggleMine(cell, cellStateChangeListeners)) {
       notifyGameStateChangeListeners(state, previous_state);
       notifyRemainingMineCountListeners(visibleField.remainingMineCount(), previousRemainingMines);
       return true;
@@ -116,7 +115,7 @@ export default (options) => {
     return false;
   };
 
-  return assign(config, {finished, mark, chord, reveal, onGameStateChange, onCellStateChange, onRemainingMineCountChange, onTimerChange, reset, addMine,
+  return assign(config, {finished, mark, chord, reveal, onGameStateChange, onCellStateChange, onRemainingMineCountChange, onTimerChange, reset, toggleMine,
     state: () => state,
     cellState: (cell) => visibleField.cellState(cell),
     remainingMineCount: () => visibleField.remainingMineCount(),

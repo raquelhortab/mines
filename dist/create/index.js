@@ -144,14 +144,13 @@ exports.default = function (options) {
     return _state;
   };
 
-  var addMine = function addMine(cell) {
+  var toggleMine = function toggleMine(cell) {
     if (!config.editable) return false;
     if (finished() || outOfBounds(cell)) return false;
     ensureMinesHaveBeenPlaced(cell);
     var previous_state = _state;
     var previousRemainingMines = _visibleField.remainingMineCount();
-    if (_visibleField.addMine(cell, cellStateChangeListeners)) {
-      console.log('game.addmine');
+    if (_visibleField.toggleMine(cell, cellStateChangeListeners)) {
       notifyGameStateChangeListeners(_state, previous_state);
       notifyRemainingMineCountListeners(_visibleField.remainingMineCount(), previousRemainingMines);
       return true;
@@ -159,7 +158,7 @@ exports.default = function (options) {
     return false;
   };
 
-  return (0, _lodash.assign)(config, { finished: finished, mark: mark, chord: chord, reveal: reveal, onGameStateChange: onGameStateChange, onCellStateChange: onCellStateChange, onRemainingMineCountChange: onRemainingMineCountChange, onTimerChange: onTimerChange, reset: reset, addMine: addMine,
+  return (0, _lodash.assign)(config, { finished: finished, mark: mark, chord: chord, reveal: reveal, onGameStateChange: onGameStateChange, onCellStateChange: onCellStateChange, onRemainingMineCountChange: onRemainingMineCountChange, onTimerChange: onTimerChange, reset: reset, toggleMine: toggleMine,
     state: function state() {
       return _state;
     },
