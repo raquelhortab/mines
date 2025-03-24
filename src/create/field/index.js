@@ -8,7 +8,7 @@ export default (dimensions, mineCount, opts) => {
   const [row_count, column_count] = dimensions;
   const state = additionalOptions.initialState || [];
   let mines = null;
-  const totalMines = mineCount;
+  let totalMines = mineCount;
   const total_cells = row_count * column_count;
 
   if (!additionalOptions.initialState) {
@@ -38,6 +38,7 @@ export default (dimensions, mineCount, opts) => {
   const addMine = ([row, column]) => {
     if (!isMine(row, column)) {
       mines.push([row, column]);
+      totalMines = mines.length;
     }
   }
 
