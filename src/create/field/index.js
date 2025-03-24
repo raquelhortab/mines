@@ -165,6 +165,7 @@ export default (dimensions, mineCount, opts) => {
     } else {
       console.log('toggleMine false');
       mines.push([row, column]);
+      console.log(mines);
       console.log('ismine', isMine(row, column));
       totalMines = mines.length;
       setCellState([row, column], CellStates.MINE, listeners);
