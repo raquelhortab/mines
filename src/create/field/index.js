@@ -39,8 +39,10 @@ export default (dimensions, mineCount, opts) => {
     if (!isMine(row, column)) {
       mines.push([row, column]);
       totalMines = mines.length;
+      return [row, column];
     }
-  }
+    return false;
+  };
 
   const neighbouringMines = (neighbours) => filter(neighbours, (neighbour) => isMine(neighbour));
 

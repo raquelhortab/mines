@@ -102,8 +102,7 @@ export default (options) => {
 
   const addMine = (cell) => {
     if (finished() || outOfBounds(cell)) return false;
-    visibleField.addMine(cell);
-    return true;
+    return visibleField.addMine(cell);
   };
 
   return assign(config, {finished, mark, chord, reveal, onGameStateChange, onCellStateChange, onRemainingMineCountChange, onTimerChange, reset, addMine,
