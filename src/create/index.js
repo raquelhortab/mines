@@ -122,6 +122,7 @@ export default (options) => {
     remainingMineCount: () => visibleField.remainingMineCount(),
     renderAsString: () => visibleField.renderAsString(),
     started: () => timeStarted,
-    visibleField: () => visibleField,
+    editable: () => config.editable,
+    visibleField: () => visibleField
   });
 };

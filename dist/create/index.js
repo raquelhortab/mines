@@ -175,6 +175,9 @@ exports.default = function (options) {
     started: function started() {
       return timeStarted;
     },
+    editable: function editable() {
+      return config.editable;
+    },
     visibleField: function visibleField() {
       return _visibleField;
     }
