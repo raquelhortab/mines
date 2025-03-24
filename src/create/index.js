@@ -67,12 +67,20 @@ export default (options) => {
     }, 1000);
   };
 
+
   const ensureMinesHaveBeenPlaced = ([row, column]) => {
+    console.log('🔍 Checking if mines need to be placed...');
     if (!visibleField.minesPlaced()) {
+      console.log('⚠️ Mines not placed yet! Placing now...');
       visibleField.placeMines(config.mines || randomlyPlaceMines(config, row, column));
       startTimer();
+      console.log('✅ Mines placed!');
+    } else {
+      console.log('✅ Mines already placed.');
     }
   };
+
+
 
   const changecellStatesWith = (fieldMethod, cell) => {
     if (finished() || outOfBounds(cell)) return state;

@@ -108,9 +108,14 @@ exports.default = function (options) {
         row = _ref4[0],
         column = _ref4[1];
 
+    console.log('🔍 Checking if mines need to be placed...');
     if (!_visibleField.minesPlaced()) {
+      console.log('⚠️ Mines not placed yet! Placing now...');
       _visibleField.placeMines(config.mines || (0, _randomlyPlaceMines2.default)(config, row, column));
       startTimer();
+      console.log('✅ Mines placed!');
+    } else {
+      console.log('✅ Mines already placed.');
     }
   };
 
