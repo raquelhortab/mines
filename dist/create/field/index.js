@@ -228,6 +228,18 @@ exports.default = function (dimensions, mineCount, opts) {
     return new_state;
   };
 
+  var publicState = function publicState() {
+    var copy = [];
+    (0, _lodash.times)(row_count, function (row_index) {
+      var row = [];
+      copy.push(row);
+      (0, _lodash.times)(column_count, function (column_index) {
+        row.push(_state[row_index][column_index] === _cellStates2.default.MINE ? _cellStates2.default.UNKNOWN : _state[row_index][column_index]);
+      });
+    });
+    return copy;
+  };
+
   var toggleMine = function toggleMine(_ref13, listeners) {
     var _ref14 = _slicedToArray(_ref13, 2),
         row = _ref14[0],
@@ -259,7 +271,7 @@ exports.default = function (dimensions, mineCount, opts) {
     return revealedCells() === total_cells - totalMines;
   };
 
-  return { placeMines: placeMines, remainingMineCount: remainingMineCount, cellState: cellState, reveal: reveal, mark: mark, chord: chord, revealed: revealed, allCellsWithoutMinesRevealed: allCellsWithoutMinesRevealed, reset: reset, toggleMine: toggleMine,
+  return { placeMines: placeMines, remainingMineCount: remainingMineCount, cellState: cellState, reveal: reveal, mark: mark, chord: chord, revealed: revealed, allCellsWithoutMinesRevealed: allCellsWithoutMinesRevealed, reset: reset, toggleMine: toggleMine, publicState: publicState,
     minesPlaced: function minesPlaced() {
       return !(0, _lodash.isNil)(mines);
     },
