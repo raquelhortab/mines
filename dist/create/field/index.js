@@ -69,6 +69,8 @@ exports.default = function (dimensions, mineCount, opts) {
   };
 
   var isMine = function isMine(cell) {
+    console.log('ismine mines', mines);
+    console.log('is mine cell', cell);
     return (0, _lodash.some)(mines, function (mine) {
       return (0, _lodash.isEqual)(cell, mine);
     });

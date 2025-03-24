@@ -34,7 +34,11 @@ export default (dimensions, mineCount, opts) => {
     return (row < 0 || row > (row_count - 1) || column < 0 || column > (column_count - 1));
   };
 
-  const isMine = (cell) => some(mines, (mine) => isEqual(cell, mine));
+  const isMine = (cell) => {
+    console.log('ismine mines', mines);
+    console.log('is mine cell', cell);
+    return some(mines, (mine) => isEqual(cell, mine));
+  };
 
   const neighbouringMines = (neighbours) => filter(neighbours, (neighbour) => isMine(neighbour));
 
