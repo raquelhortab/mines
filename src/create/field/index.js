@@ -35,8 +35,6 @@ export default (dimensions, mineCount, opts) => {
   };
 
   const isMine = (cell) => {
-    console.log('ismine mines', mines);
-    console.log('is mine cell', cell);
     return some(mines, (mine) => isEqual(cell, mine));
   };
 
