@@ -52,6 +52,8 @@ const configuration = (options) => {
     result.mines = mines;
   }
 
+  result.editable = Boolean(options.editable);
+
   return result;
 };
 

@@ -74,20 +74,6 @@ exports.default = function (dimensions, mineCount, opts) {
     });
   };
 
-  var addMine = function addMine(_ref7) {
-    var _ref8 = _slicedToArray(_ref7, 2),
-        row = _ref8[0],
-        column = _ref8[1];
-
-    console.log('Attempting to add mine at:', row, column, 'Current mines:', mines);
-    if (!isMine(row, column)) {
-      mines.push([row, column]);
-      totalMines = mines.length;
-      return [row, column];
-    }
-    return false;
-  };
-
   var neighbouringMines = function neighbouringMines(neighbours) {
     return (0, _lodash.filter)(neighbours, function (neighbour) {
       return isMine(neighbour);
@@ -100,18 +86,18 @@ exports.default = function (dimensions, mineCount, opts) {
     });
   };
 
-  var cellState = function cellState(_ref9) {
-    var _ref10 = _slicedToArray(_ref9, 2),
-        row = _ref10[0],
-        column = _ref10[1];
+  var cellState = function cellState(_ref7) {
+    var _ref8 = _slicedToArray(_ref7, 2),
+        row = _ref8[0],
+        column = _ref8[1];
 
     return _state[row][column];
   };
 
-  var revealed = function revealed(_ref11) {
-    var _ref12 = _slicedToArray(_ref11, 2),
-        row = _ref12[0],
-        column = _ref12[1];
+  var revealed = function revealed(_ref9) {
+    var _ref10 = _slicedToArray(_ref9, 2),
+        row = _ref10[0],
+        column = _ref10[1];
 
     return (0, _lodash.some)((0, _lodash.range)(9), function (number) {
       return _state[row][column] === _cellStates2.default[number];
@@ -135,10 +121,10 @@ exports.default = function (dimensions, mineCount, opts) {
     });
   };
 
-  var setCellState = function setCellState(_ref13, new_state, listeners) {
-    var _ref14 = _slicedToArray(_ref13, 2),
-        row = _ref14[0],
-        column = _ref14[1];
+  var setCellState = function setCellState(_ref11, new_state, listeners) {
+    var _ref12 = _slicedToArray(_ref11, 2),
+        row = _ref12[0],
+        column = _ref12[1];
 
     var previous_state = _state[row][column];
     _state[row][column] = new_state;
@@ -240,6 +226,20 @@ exports.default = function (dimensions, mineCount, opts) {
     var new_state = getNewMarkedState(previous_state);
     setCellState(cell, new_state, listeners);
     return new_state;
+  };
+
+  var addMine = function addMine(_ref13, listeners) {
+    var _ref14 = _slicedToArray(_ref13, 2),
+        row = _ref14[0],
+        column = _ref14[1];
+
+    if (!isMine(row, column)) {
+      mines.push([row, column]);
+      totalMines = mines.length;
+      setCellState([row, column], _cellStates2.default.MINE, listeners);
+      return true;
+    }
+    return false;
   };
 
   // mines is an array of positions [row, col]

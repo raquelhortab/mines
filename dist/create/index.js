@@ -108,15 +108,10 @@ exports.default = function (options) {
         row = _ref4[0],
         column = _ref4[1];
 
-    console.log('🔍 Checking if mines need to be placed...');
     if (!_visibleField.minesPlaced()) {
-      console.log('⚠️ Mines not placed yet! Placing now...');
       _visibleField.placeMines(config.mines || (0, _randomlyPlaceMines2.default)(config, row, column));
       startTimer();
-      console.log('✅ Mines placed!');
-    } else {
-      console.log('✅ Mines already placed.');
-    }
+    } else {}
   };
 
   var changecellStatesWith = function changecellStatesWith(fieldMethod, cell) {
@@ -150,9 +145,17 @@ exports.default = function (options) {
   };
 
   var addMine = function addMine(cell) {
+    if (!config.editable) return false;
     if (finished() || outOfBounds(cell)) return false;
+    var previous_state = _state;
+    var previousRemainingMines = _visibleField.remainingMineCount();
     ensureMinesHaveBeenPlaced(cell);
-    return _visibleField.addMine(cell);
+    if (_visibleField.addMine(cell, cellStateChangeListeners)) {
+      notifyGameStateChangeListeners(_state, previous_state);
+      notifyRemainingMineCountListeners(_visibleField.remainingMineCount(), previousRemainingMines);
+      return true;
+    }
+    return false;
   };
 
   return (0, _lodash.assign)(config, { finished: finished, mark: mark, chord: chord, reveal: reveal, onGameStateChange: onGameStateChange, onCellStateChange: onCellStateChange, onRemainingMineCountChange: onRemainingMineCountChange, onTimerChange: onTimerChange, reset: reset, addMine: addMine,

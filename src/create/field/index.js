@@ -2,6 +2,7 @@ import cellStates from '../../cellStates';
 import cellNeighbours from './cellNeighbours';
 import renderAsString from './renderAsString';
 import {times, isNil, isEqual, filter, some, map, range, each} from 'lodash';
+import CellStates from "../../cellStates";
 
 export default (dimensions, mineCount, opts) => {
   let additionalOptions = opts || {};
@@ -34,16 +35,6 @@ export default (dimensions, mineCount, opts) => {
   };
 
   const isMine = (cell) => some(mines, (mine) => isEqual(cell, mine));
-
-  const addMine = ([row, column]) => {
-    console.log('Attempting to add mine at:', row, column, 'Current mines:', mines);
-    if (!isMine(row, column)) {
-      mines.push([row, column]);
-      totalMines = mines.length;
-      return [row, column];
-    }
-    return false;
-  };
 
   const neighbouringMines = (neighbours) => filter(neighbours, (neighbour) => isMine(neighbour));
 
@@ -163,6 +154,16 @@ export default (dimensions, mineCount, opts) => {
     const new_state = getNewMarkedState(previous_state);
     setCellState(cell, new_state, listeners);
     return new_state;
+  };
+
+  const addMine = ([row, column], listeners) => {
+    if (!isMine(row, column)) {
+      mines.push([row, column]);
+      totalMines = mines.length;
+      setCellState([row, column], CellStates.MINE, listeners);
+      return true;
+    }
+    return false;
   };
 
   // mines is an array of positions [row, col]

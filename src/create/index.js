@@ -67,20 +67,13 @@ export default (options) => {
     }, 1000);
   };
 
-
   const ensureMinesHaveBeenPlaced = ([row, column]) => {
-    console.log('🔍 Checking if mines need to be placed...');
     if (!visibleField.minesPlaced()) {
-      console.log('⚠️ Mines not placed yet! Placing now...');
       visibleField.placeMines(config.mines || randomlyPlaceMines(config, row, column));
       startTimer();
-      console.log('✅ Mines placed!');
     } else {
-      console.log('✅ Mines already placed.');
     }
   };
-
-
 
   const changecellStatesWith = (fieldMethod, cell) => {
     if (finished() || outOfBounds(cell)) return state;
@@ -109,9 +102,17 @@ export default (options) => {
   };
 
   const addMine = (cell) => {
+    if (!config.editable) return false;
     if (finished() || outOfBounds(cell)) return false;
+    const previous_state = state;
+    const previousRemainingMines = visibleField.remainingMineCount();
     ensureMinesHaveBeenPlaced(cell);
-    return visibleField.addMine(cell);
+    if (visibleField.addMine(cell, cellStateChangeListeners)) {
+      notifyGameStateChangeListeners(state, previous_state);
+      notifyRemainingMineCountListeners(visibleField.remainingMineCount(), previousRemainingMines);
+      return true;
+    }
+    return false;
   };
 
   return assign(config, {finished, mark, chord, reveal, onGameStateChange, onCellStateChange, onRemainingMineCountChange, onTimerChange, reset, addMine,
