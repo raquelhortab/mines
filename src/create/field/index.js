@@ -172,11 +172,10 @@ export default (dimensions, mineCount, opts) => {
 
   const allCellsWithoutMinesRevealed = () => revealedCells() === (total_cells - totalMines);
 
-  return { placeMines, remainingMineCount, cellState, reveal, mark, chord, revealed, allCellsWithoutMinesRevealed, reset,
+  return { placeMines, remainingMineCount, cellState, reveal, mark, chord, revealed, allCellsWithoutMinesRevealed, reset, addMine,
     minesPlaced: () => !isNil(mines),
     renderAsString: () => renderAsString(state),
     state: () => state,
-    addMine: () => addMine,
     mines: () => mines
   };
 };
