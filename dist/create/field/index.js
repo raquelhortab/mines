@@ -235,7 +235,7 @@ exports.default = function (dimensions, mineCount, opts) {
         row = _ref14[0],
         column = _ref14[1];
 
-    if (isMine(row, column)) {
+    if (isMine([row, column])) {
       console.log('toggleMine true');
       mines = mines.filter(function (coord) {
         return !(0, _lodash.isEqual)([row, column], coord);
@@ -246,7 +246,7 @@ exports.default = function (dimensions, mineCount, opts) {
       console.log('toggleMine false');
       mines.push([row, column]);
       console.log(mines);
-      console.log('ismine', isMine(row, column));
+      console.log('ismine', isMine([row, column]));
       totalMines = mines.length;
       setCellState([row, column], _cellStates2.default.MINE, listeners);
     }
