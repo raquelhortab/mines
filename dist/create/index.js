@@ -151,6 +151,7 @@ exports.default = function (options) {
 
   var addMine = function addMine(cell) {
     if (finished() || outOfBounds(cell)) return false;
+    ensureMinesHaveBeenPlaced(cell);
     return _visibleField.addMine(cell);
   };
 

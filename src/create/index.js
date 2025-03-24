@@ -110,6 +110,7 @@ export default (options) => {
 
   const addMine = (cell) => {
     if (finished() || outOfBounds(cell)) return false;
+    ensureMinesHaveBeenPlaced(cell);
     return visibleField.addMine(cell);
   };
 
