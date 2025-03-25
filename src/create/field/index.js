@@ -191,6 +191,8 @@ export default (dimensions, mineCount, opts) => {
   // mines is an array of positions [row, col]
   const placeMines = (m, updateCount) => {
     if (m.length !== totalMines && !updateCount) {
+      console.log('m.length', m.length);
+      console.log('totalMines',totalMines);
       throw Error('The number of mines being placed does not match config');
     }
     mines = m;
