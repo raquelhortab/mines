@@ -10,7 +10,7 @@ export default (dimensions, mineCount, opts) => {
   const [row_count, column_count] = dimensions;
   let state = additionalOptions.initialState || [];
   let mines = null;
-  let totalMines = mineCount;
+  let totalMines = mineCount || 0;
   const total_cells = row_count * column_count;
 
   if (!additionalOptions.initialState) {
@@ -190,6 +190,7 @@ export default (dimensions, mineCount, opts) => {
 
   // mines is an array of positions [row, col]
   const placeMines = (m, updateCount) => {
+    console.log('m', m);
     if (m.length !== totalMines && !updateCount) {
       console.log('m.length', m.length);
       console.log('totalMines',totalMines);
