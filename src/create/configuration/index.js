@@ -40,7 +40,7 @@ const configuration = (options) => {
     result.mine_count = preset.mine_count;
   } else {
     result.dimensions = specifiedOrEmptyOptions.dimensions;
-    result.mine_count = specifiedOrEmptyOptions.mine_count;
+    result.mine_count = specifiedOrEmptyOptions.mine_count || 0;
     validate_dimensions(result.dimensions);
   }
 
