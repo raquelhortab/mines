@@ -67,6 +67,26 @@ exports.default = function (options) {
   var notifyRemainingMineCountListeners = notifyListeners.bind(null, remainingMineCountListeners);
   var notifyTimerChangeListeners = notifyListeners.bind(null, timerChangeListeners);
 
+  var loadFieldData = function loadFieldData(data) {
+    var previous_state = _state;
+    var previousRemainingMines = _visibleField.remainingMineCount();
+    if (data.mines) {
+      _visibleField.placeMines(data.mines, true);
+    }
+    if (data.state) {
+      _visibleField.setState(data.state);
+    }
+    notifyGameStateChangeListeners(_state, previous_state);
+    notifyRemainingMineCountListeners(_visibleField.remainingMineCount(), previousRemainingMines);
+  };
+
+  var getFieldData = function getFieldData(data) {
+    return {
+      mines: _visibleField.getMines(),
+      state: _visibleField.state()
+    };
+  };
+
   var reset = function reset() {
     var previousElapsedTime = elapsedTime;
     var previousState = _state;
@@ -158,7 +178,7 @@ exports.default = function (options) {
     return false;
   };
 
-  return (0, _lodash.assign)(config, { finished: finished, mark: mark, chord: chord, reveal: reveal, onGameStateChange: onGameStateChange, onCellStateChange: onCellStateChange, onRemainingMineCountChange: onRemainingMineCountChange, onTimerChange: onTimerChange, reset: reset, toggleMine: toggleMine,
+  return (0, _lodash.assign)(config, { finished: finished, mark: mark, chord: chord, reveal: reveal, onGameStateChange: onGameStateChange, onCellStateChange: onCellStateChange, onRemainingMineCountChange: onRemainingMineCountChange, onTimerChange: onTimerChange, reset: reset, toggleMine: toggleMine, loadFieldData: loadFieldData,
     state: function state() {
       return _state;
     },

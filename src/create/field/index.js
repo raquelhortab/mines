@@ -3,11 +3,12 @@ import cellNeighbours from './cellNeighbours';
 import renderAsString from './renderAsString';
 import {times, isNil, isEqual, filter, some, map, range, each} from 'lodash';
 import CellStates from "../../cellStates";
+import {update} from "lodash/object";
 
 export default (dimensions, mineCount, opts) => {
   let additionalOptions = opts || {};
   const [row_count, column_count] = dimensions;
-  const state = additionalOptions.initialState || [];
+  let state = additionalOptions.initialState || [];
   let mines = null;
   let totalMines = mineCount;
   const total_cells = row_count * column_count;
@@ -183,17 +184,22 @@ export default (dimensions, mineCount, opts) => {
     return true;
   };
 
+  const setState = (newState) => {
+    state = newState;
+  }
+
   // mines is an array of positions [row, col]
-  const placeMines = (m) => {
-    if (m.length !== totalMines) {
+  const placeMines = (m, updateCount) => {
+    if (m.length !== totalMines && !updateCount) {
       throw Error('The number of mines being placed does not match config');
     }
     mines = m;
+    if (updateCount) totalMines = mines.length;
   };
 
   const allCellsWithoutMinesRevealed = () => revealedCells() === (total_cells - totalMines);
 
-  return { placeMines, remainingMineCount, cellState, reveal, mark, chord, revealed, allCellsWithoutMinesRevealed, reset, toggleMine, publicState,
+  return { placeMines, remainingMineCount, cellState, reveal, mark, chord, revealed, allCellsWithoutMinesRevealed, reset, toggleMine, publicState, setState,
     minesPlaced: () => !isNil(mines),
     renderAsString: () => renderAsString(state),
     state: () => state,

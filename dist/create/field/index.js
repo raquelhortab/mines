@@ -20,6 +20,8 @@ var _renderAsString3 = _interopRequireDefault(_renderAsString2);
 
 var _lodash = require('lodash');
 
+var _object = require('lodash/object');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = function (dimensions, mineCount, opts) {
@@ -259,19 +261,24 @@ exports.default = function (dimensions, mineCount, opts) {
     return true;
   };
 
+  var setState = function setState(newState) {
+    _state = newState;
+  };
+
   // mines is an array of positions [row, col]
-  var placeMines = function placeMines(m) {
-    if (m.length !== totalMines) {
+  var placeMines = function placeMines(m, updateCount) {
+    if (m.length !== totalMines && !updateCount) {
       throw Error('The number of mines being placed does not match config');
     }
     mines = m;
+    if (updateCount) totalMines = mines.length;
   };
 
   var allCellsWithoutMinesRevealed = function allCellsWithoutMinesRevealed() {
     return revealedCells() === total_cells - totalMines;
   };
 
-  return { placeMines: placeMines, remainingMineCount: remainingMineCount, cellState: cellState, reveal: reveal, mark: mark, chord: chord, revealed: revealed, allCellsWithoutMinesRevealed: allCellsWithoutMinesRevealed, reset: reset, toggleMine: toggleMine, publicState: publicState,
+  return { placeMines: placeMines, remainingMineCount: remainingMineCount, cellState: cellState, reveal: reveal, mark: mark, chord: chord, revealed: revealed, allCellsWithoutMinesRevealed: allCellsWithoutMinesRevealed, reset: reset, toggleMine: toggleMine, publicState: publicState, setState: setState,
     minesPlaced: function minesPlaced() {
       return !(0, _lodash.isNil)(mines);
     },

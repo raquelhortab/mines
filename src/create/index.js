@@ -33,6 +33,26 @@ export default (options) => {
   const notifyRemainingMineCountListeners = notifyListeners.bind(null, remainingMineCountListeners);
   const notifyTimerChangeListeners = notifyListeners.bind(null, timerChangeListeners);
 
+  const loadFieldData = (data) => {
+    const previous_state = state;
+    const previousRemainingMines = visibleField.remainingMineCount();
+    if (data.mines) {
+      visibleField.placeMines(data.mines, true);
+    }
+    if (data.state) {
+      visibleField.setState(data.state);
+    }
+    notifyGameStateChangeListeners(state, previous_state);
+    notifyRemainingMineCountListeners(visibleField.remainingMineCount(), previousRemainingMines);
+  };
+
+  const getFieldData = (data) => {
+    return {
+      mines: visibleField.getMines(),
+      state: visibleField.state()
+    }
+  }
+
   const reset = () => {
     const previousElapsedTime = elapsedTime;
     const previousState = state;
@@ -115,7 +135,7 @@ export default (options) => {
     return false;
   };
 
-  return assign(config, {finished, mark, chord, reveal, onGameStateChange, onCellStateChange, onRemainingMineCountChange, onTimerChange, reset, toggleMine,
+  return assign(config, {finished, mark, chord, reveal, onGameStateChange, onCellStateChange, onRemainingMineCountChange, onTimerChange, reset, toggleMine, loadFieldData,
     state: () => state,
     cellState: (cell) => visibleField.cellState(cell),
     remainingMineCount: () => visibleField.remainingMineCount(),
