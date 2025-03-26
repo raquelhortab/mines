@@ -39,6 +39,7 @@ export default (options) => {
   const loadFieldData = (data) => {
     const previous_state = state;
     const previousRemainingMines = visibleField.remainingMineCount();
+    console.log('loadFieldData', data);
     if (data.mines) {
       visibleField.placeMines(data.mines, {updateCount: true, showMines: true});
     }

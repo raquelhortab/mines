@@ -73,6 +73,7 @@ exports.default = function (options) {
   var loadFieldData = function loadFieldData(data) {
     var previous_state = _state;
     var previousRemainingMines = _visibleField.remainingMineCount();
+    console.log('loadFieldData', data);
     if (data.mines) {
       _visibleField.placeMines(data.mines, { updateCount: true, showMines: true });
     }
