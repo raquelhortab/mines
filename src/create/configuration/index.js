@@ -36,7 +36,6 @@ const configuration = (options) => {
   const result = {};
 
   result.editable = Boolean(options.editable);
-  console.log('config editable', result.editable);
 
   if (preset) {
     result.dimensions = preset.dimensions;

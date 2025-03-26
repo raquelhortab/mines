@@ -53,6 +53,7 @@ export default (dimensions, mineCount, opts) => {
     mines = null;
     console.log('field reset', opts);
     if (opts && opts.mine_count) totalMines = opts.mine_count;
+    console.log('totalMines', totalMines);
     times(row_count, (row) => {
       times(column_count, (col) => {
         const previousState = state[row][col];

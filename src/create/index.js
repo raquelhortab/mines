@@ -10,6 +10,7 @@ export default (options) => {
   const remainingMineCountListeners = [];
   const timerChangeListeners = [];
   const config = configuration(options);
+  console.log('create config editable', config.editable);
   const additionalFieldOptions = {
     initialState: options.initialState
   };
@@ -60,7 +61,6 @@ export default (options) => {
     state = gameStates.NOT_STARTED;
     timeStarted = null;
     elapsedTime = 0;
-    console.log('reset', config.editable);
     const opts = config.editable ? {mine_count: 0} : {};
     visibleField.reset(cellStateChangeListeners, opts);
     if (intervalToken) {
