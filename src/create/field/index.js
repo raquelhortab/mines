@@ -51,7 +51,7 @@ export default (dimensions, mineCount, opts) => {
 
   const reset = (listeners, opts) => {
     mines = null;
-    consol.log('field reset', opts);
+    console.log('field reset', opts);
     if (opts && opts.mine_count) totalMines = opts.mine_count;
     times(row_count, (row) => {
       times(column_count, (col) => {
