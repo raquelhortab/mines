@@ -35,6 +35,8 @@ const configuration = (options) => {
   const preset = presets[specifiedOrEmptyOptions.preset];
   const result = {};
 
+  result.editable = Boolean(options.editable);
+
   if (preset) {
     result.dimensions = preset.dimensions;
     result.mine_count = preset.mine_count;
@@ -44,15 +46,13 @@ const configuration = (options) => {
     validate_dimensions(result.dimensions);
   }
 
-  result.mine_count = determine_mine_count(mines, result.mine_count);
-  validate_mine_count(result.dimensions, result.mine_count);
+  result.mine_count = determine_mine_count(mines, result.mine_count) || 0;
+  if (!result.editable) validate_mine_count(result.dimensions, result.mine_count);
 
   if (!isNil(mines)) {
     result.test_mode = true;
     result.mines = mines;
   }
-
-  result.editable = Boolean(options.editable);
 
   return result;
 };
