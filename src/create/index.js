@@ -53,7 +53,7 @@ export default (options) => {
     return {
       mines: visibleField.getMines(),
       state: visibleField.state()
-    }
+    };
   };
 
   const reset = () => {
@@ -139,7 +139,7 @@ export default (options) => {
     return false;
   };
 
-  return assign(config, {finished, mark, chord, reveal, onGameStateChange, onCellStateChange, onRemainingMineCountChange, onTimerChange, reset, toggleMine, loadFieldData,
+  return assign(config, {finished, mark, chord, reveal, onGameStateChange, onCellStateChange, onRemainingMineCountChange, onTimerChange, reset, toggleMine, loadFieldData, getFieldData,
     state: () => state,
     cellState: (cell) => visibleField.cellState(cell),
     remainingMineCount: () => visibleField.remainingMineCount(),
