@@ -52,7 +52,7 @@ export default (options) => {
   const getFieldData = (data) => {
     return {
       mines: visibleField.getMines(),
-      state: visibleField.state()
+      state: visibleField.publicState()
     };
   };
 

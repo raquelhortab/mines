@@ -86,7 +86,7 @@ exports.default = function (options) {
   var getFieldData = function getFieldData(data) {
     return {
       mines: _visibleField.getMines(),
-      state: _visibleField.state()
+      state: _visibleField.publicState()
     };
   };
 
