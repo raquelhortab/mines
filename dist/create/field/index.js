@@ -264,8 +264,13 @@ exports.default = function (dimensions, mineCount, opts) {
     return true;
   };
 
-  var setState = function setState(newState) {
+  var setState = function setState(newState, listeners) {
     _state = newState;
+    (0, _lodash.times)(row_count, function (row_index) {
+      (0, _lodash.times)(column_count, function (column_index) {
+        notifyListeners(listeners, [row_index, column_index], _state[row_index][column_index], null);
+      });
+    });
   };
 
   // mines is an array of positions [row, col]

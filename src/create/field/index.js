@@ -185,8 +185,13 @@ export default (dimensions, mineCount, opts) => {
     return true;
   };
 
-  const setState = (newState) => {
+  const setState = (newState, listeners) => {
     state = newState;
+    times(row_count, (row_index) => {
+      times(column_count, (column_index) => {
+        notifyListeners(listeners, [row_index, column_index], state[row_index][column_index], null);
+      });
+    });
   };
 
   // mines is an array of positions [row, col]
