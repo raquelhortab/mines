@@ -13,15 +13,19 @@ export default (dimensions, mineCount, opts) => {
   let totalMines = mineCount || 0;
   const total_cells = row_count * column_count;
 
-  if (!additionalOptions.initialState) {
+  const updateState = (showMines) => {
     times(row_count, (row_index) => {
       const row = [];
       state.push(row);
       times(column_count, (column_index) => {
-        row.push(cellStates.UNKNOWN);
+        if (showMines && isMine([row_index, column_index])) {
+          row.push(cellStates.MINE);
+        } else {
+          row.push(cellStates.UNKNOWN);
+        }
       });
     });
-  }
+  };
 
   const marked = ([row, column]) => {
     return state[row][column] === cellStates.MARKED;
@@ -190,18 +194,24 @@ export default (dimensions, mineCount, opts) => {
   }
 
   // mines is an array of positions [row, col]
-  const placeMines = (m, updateCount) => {
+  const placeMines = (m, opts) => {
+    let options = opts || {};
+    const updateCount = options.updateCount || false;
+    const showMines = options.showMines || false;
     console.log('m', m);
     if (m.length !== totalMines && !updateCount) {
-      console.log('m.length', m.length);
-      console.log('totalMines',totalMines);
       throw Error('The number of mines being placed does not match config');
     }
     mines = m;
     if (updateCount) totalMines = mines.length;
+    updateState(showMines);
   };
 
   const allCellsWithoutMinesRevealed = () => revealedCells() === (total_cells - totalMines);
+
+  if (!additionalOptions.initialState) {
+    updateState();
+  }
 
   return { placeMines, remainingMineCount, cellState, reveal, mark, chord, revealed, allCellsWithoutMinesRevealed, reset, toggleMine, publicState, setState,
     minesPlaced: () => !isNil(mines),

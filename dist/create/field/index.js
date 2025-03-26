@@ -36,15 +36,19 @@ exports.default = function (dimensions, mineCount, opts) {
   var totalMines = mineCount || 0;
   var total_cells = row_count * column_count;
 
-  if (!additionalOptions.initialState) {
+  var updateState = function updateState(showMines) {
     (0, _lodash.times)(row_count, function (row_index) {
       var row = [];
       _state.push(row);
       (0, _lodash.times)(column_count, function (column_index) {
-        row.push(_cellStates2.default.UNKNOWN);
+        if (showMines && isMine([row_index, column_index])) {
+          row.push(_cellStates2.default.MINE);
+        } else {
+          row.push(_cellStates2.default.UNKNOWN);
+        }
       });
     });
-  }
+  };
 
   var marked = function marked(_ref) {
     var _ref2 = _slicedToArray(_ref, 2),
@@ -267,20 +271,26 @@ exports.default = function (dimensions, mineCount, opts) {
   };
 
   // mines is an array of positions [row, col]
-  var placeMines = function placeMines(m, updateCount) {
+  var placeMines = function placeMines(m, opts) {
+    var options = opts || {};
+    var updateCount = options.updateCount || false;
+    var showMines = options.showMines || false;
     console.log('m', m);
     if (m.length !== totalMines && !updateCount) {
-      console.log('m.length', m.length);
-      console.log('totalMines', totalMines);
       throw Error('The number of mines being placed does not match config');
     }
     mines = m;
     if (updateCount) totalMines = mines.length;
+    updateState(showMines);
   };
 
   var allCellsWithoutMinesRevealed = function allCellsWithoutMinesRevealed() {
     return revealedCells() === total_cells - totalMines;
   };
+
+  if (!additionalOptions.initialState) {
+    updateState();
+  }
 
   return { placeMines: placeMines, remainingMineCount: remainingMineCount, cellState: cellState, reveal: reveal, mark: mark, chord: chord, revealed: revealed, allCellsWithoutMinesRevealed: allCellsWithoutMinesRevealed, reset: reset, toggleMine: toggleMine, publicState: publicState, setState: setState,
     minesPlaced: function minesPlaced() {

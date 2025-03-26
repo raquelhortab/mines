@@ -40,7 +40,7 @@ export default (options) => {
     const previous_state = state;
     const previousRemainingMines = visibleField.remainingMineCount();
     if (data.mines) {
-      visibleField.placeMines(data.mines, true);
+      visibleField.placeMines(data.mines, {updateCount: true, showMines: true});
     }
     if (data.state) {
       visibleField.setState(data.state);

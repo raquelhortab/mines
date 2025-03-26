@@ -74,7 +74,7 @@ exports.default = function (options) {
     var previous_state = _state;
     var previousRemainingMines = _visibleField.remainingMineCount();
     if (data.mines) {
-      _visibleField.placeMines(data.mines, true);
+      _visibleField.placeMines(data.mines, { updateCount: true, showMines: true });
     }
     if (data.state) {
       _visibleField.setState(data.state);
