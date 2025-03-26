@@ -19,7 +19,7 @@ export default (dimensions, mineCount, opts) => {
       const row = [];
       state.push(row);
       times(column_count, (column_index) => {
-        if(console.log('updateState isMine', isMine([row_index, column_index]));)
+        console.log('updateState isMine', isMine([row_index, column_index]));
         if (showMines && isMine([row_index, column_index])) {
           row.push(cellStates.MINE);
         } else {

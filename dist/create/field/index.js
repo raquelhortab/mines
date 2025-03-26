@@ -37,10 +37,12 @@ exports.default = function (dimensions, mineCount, opts) {
   var total_cells = row_count * column_count;
 
   var updateState = function updateState(showMines) {
+    console.log('updateState showMines', showMines);
     (0, _lodash.times)(row_count, function (row_index) {
       var row = [];
       _state.push(row);
       (0, _lodash.times)(column_count, function (column_index) {
+        console.log('updateState isMine', isMine([row_index, column_index]));
         if (showMines && isMine([row_index, column_index])) {
           row.push(_cellStates2.default.MINE);
         } else {
