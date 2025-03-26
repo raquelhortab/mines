@@ -14,10 +14,12 @@ export default (dimensions, mineCount, opts) => {
   const total_cells = row_count * column_count;
 
   const updateState = (showMines) => {
+    console.log('updateState showMines', showMines);
     times(row_count, (row_index) => {
       const row = [];
       state.push(row);
       times(column_count, (column_index) => {
+        if(console.log('updateState isMine', isMine([row_index, column_index]));)
         if (showMines && isMine([row_index, column_index])) {
           row.push(cellStates.MINE);
         } else {
