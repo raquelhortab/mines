@@ -36,7 +36,7 @@ exports.default = function (dimensions, mineCount, opts) {
   var totalMines = mineCount || 0;
   var total_cells = row_count * column_count;
 
-  var updateState = function updateState(showMines) {
+  var updateState = function updateState(showMines, listeners) {
     console.log('updateState showMines', showMines);
     (0, _lodash.times)(row_count, function (row_index) {
       var row = [];
@@ -45,6 +45,7 @@ exports.default = function (dimensions, mineCount, opts) {
         console.log('updateState isMine', isMine([row_index, column_index]));
         if (showMines && isMine([row_index, column_index])) {
           row.push(_cellStates2.default.MINE);
+          setCellState([row_index, column_index], _cellStates2.default.MINE, listeners);
         } else {
           row.push(_cellStates2.default.UNKNOWN);
         }
@@ -114,7 +115,9 @@ exports.default = function (dimensions, mineCount, opts) {
 
   var notifyListeners = function notifyListeners(listeners, cell, state, previous_state) {
     return (0, _lodash.map)(listeners, function (cb) {
-      cb(cell, state, previous_state);
+      if (cb) {
+        return cb(cell, state, previous_state);
+      }
     });
   };
 

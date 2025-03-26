@@ -13,7 +13,7 @@ export default (dimensions, mineCount, opts) => {
   let totalMines = mineCount || 0;
   const total_cells = row_count * column_count;
 
-  const updateState = (showMines) => {
+  const updateState = (showMines, listeners) => {
     console.log('updateState showMines', showMines);
     times(row_count, (row_index) => {
       const row = [];
@@ -22,6 +22,7 @@ export default (dimensions, mineCount, opts) => {
         console.log('updateState isMine', isMine([row_index, column_index]));
         if (showMines && isMine([row_index, column_index])) {
           row.push(cellStates.MINE);
+          setCellState([row_index, column_index], cellStates.MINE, listeners);
         } else {
           row.push(cellStates.UNKNOWN);
         }
@@ -53,7 +54,7 @@ export default (dimensions, mineCount, opts) => {
 
   const revealed = ([row, column]) => some(range(9), (number) => state[row][column] === cellStates[number]);
 
-  const notifyListeners = (listeners, cell, state, previous_state) => map(listeners, (cb) => { cb(cell, state, previous_state); });
+  const notifyListeners = (listeners, cell, state, previous_state) => map(listeners, (cb) => { if (cb) { return cb(cell, state, previous_state); } });
 
   const reset = (listeners, opts) => {
     mines = null;
@@ -208,6 +209,7 @@ export default (dimensions, mineCount, opts) => {
     mines = m;
     if (updateCount) totalMines = mines.length;
     updateState(showMines);
+
   };
 
   const allCellsWithoutMinesRevealed = () => revealedCells() === (total_cells - totalMines);
