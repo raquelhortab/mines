@@ -197,6 +197,7 @@ export default (dimensions, mineCount, opts) => {
 
   // mines is an array of positions [row, col]
   const placeMines = (m, opts) => {
+    console.log('placeMines');
     let options = opts || {};
     const updateCount = options.updateCount || false;
     const showMines = options.showMines || false;

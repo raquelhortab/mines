@@ -274,6 +274,7 @@ exports.default = function (dimensions, mineCount, opts) {
 
   // mines is an array of positions [row, col]
   var placeMines = function placeMines(m, opts) {
+    console.log('placeMines');
     var options = opts || {};
     var updateCount = options.updateCount || false;
     var showMines = options.showMines || false;
