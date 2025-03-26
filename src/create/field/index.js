@@ -186,10 +186,9 @@ export default (dimensions, mineCount, opts) => {
   };
 
   const setState = (newState, listeners) => {
-    state = newState;
     times(row_count, (row_index) => {
       times(column_count, (column_index) => {
-        notifyListeners(listeners, [row_index, column_index], state[row_index][column_index], null);
+        setCellState([row_index, column_index], newState[row_index][column_index], listeners);
       });
     });
   };
