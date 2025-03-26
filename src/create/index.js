@@ -41,7 +41,7 @@ export default (options) => {
     const previousRemainingMines = visibleField.remainingMineCount();
     console.log('loadFieldData', data);
     if (data.mines) {
-      visibleField.placeMines(data.mines, {updateCount: true, showMines: true});
+      visibleField.placeMines(data.mines, {updateCount: true, showMines: true, listeners: cellStateChangeListeners});
     }
     if (data.state) {
       visibleField.setState(data.state);

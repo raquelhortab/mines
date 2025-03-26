@@ -287,7 +287,7 @@ exports.default = function (dimensions, mineCount, opts) {
     }
     mines = m;
     if (updateCount) totalMines = mines.length;
-    updateState(showMines);
+    updateState(showMines, opts.listeners);
   };
 
   var allCellsWithoutMinesRevealed = function allCellsWithoutMinesRevealed() {
