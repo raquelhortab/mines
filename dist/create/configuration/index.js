@@ -62,6 +62,7 @@ var configuration = function configuration(options) {
     validate_dimensions(result.dimensions);
   }
 
+  console.log('specifiedOrEmptyOptions', specifiedOrEmptyOptions.mine_count);
   result.mine_count = specifiedOrEmptyOptions.mine_count === undefined ? result.mine_count || 0 : specifiedOrEmptyOptions.mine_count;
   result.mine_count = determine_mine_count(mines, result.mine_count) || 0;
   if (!result.editable) validate_mine_count(result.dimensions, result.mine_count);
