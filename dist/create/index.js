@@ -33,6 +33,7 @@ exports.default = function (options) {
   var timerChangeListeners = [];
   var config = (0, _configuration2.default)(options);
   console.log('create config editable', config.editable);
+  console.log('create config mine_count', config.mine_count);
   var additionalFieldOptions = {
     initialState: options.initialState
   };

@@ -11,6 +11,7 @@ export default (options) => {
   const timerChangeListeners = [];
   const config = configuration(options);
   console.log('create config editable', config.editable);
+  console.log('create config mine_count', config.mine_count);
   const additionalFieldOptions = {
     initialState: options.initialState
   };
