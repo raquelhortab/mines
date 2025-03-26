@@ -94,7 +94,8 @@ exports.default = function (options) {
     _state = _gameStates2.default.NOT_STARTED;
     timeStarted = null;
     elapsedTime = 0;
-    _visibleField.reset(cellStateChangeListeners);
+    var opts = config.editable ? { mine_count: 0 } : {};
+    _visibleField.reset(cellStateChangeListeners, opts);
     if (intervalToken) {
       global.clearInterval(intervalToken);
       intervalToken = null;

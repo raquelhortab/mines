@@ -51,7 +51,7 @@ export default (options) => {
       mines: visibleField.getMines(),
       state: visibleField.state()
     }
-  }
+  };
 
   const reset = () => {
     const previousElapsedTime = elapsedTime;
@@ -60,7 +60,8 @@ export default (options) => {
     state = gameStates.NOT_STARTED;
     timeStarted = null;
     elapsedTime = 0;
-    visibleField.reset(cellStateChangeListeners);
+    const opts = config.editable ? {mine_count: 0} : {};
+    visibleField.reset(cellStateChangeListeners, opts);
     if (intervalToken) {
       global.clearInterval(intervalToken);
       intervalToken = null;

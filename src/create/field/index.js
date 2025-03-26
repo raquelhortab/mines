@@ -49,8 +49,9 @@ export default (dimensions, mineCount, opts) => {
 
   const notifyListeners = (listeners, cell, state, previous_state) => map(listeners, (cb) => { cb(cell, state, previous_state); });
 
-  const reset = (listeners) => {
+  const reset = (listeners, opts) => {
     mines = null;
+    if (opts.mine_count) totalMines = opts.mine_count;
     times(row_count, (row) => {
       times(column_count, (col) => {
         const previousState = state[row][col];
