@@ -40,11 +40,11 @@ export default (options) => {
     const previous_state = state;
     const previousRemainingMines = visibleField.remainingMineCount();
     console.log('loadFieldData', data);
-    if (data.mines) {
-      visibleField.placeMines(data.mines, {updateCount: true, showMines: true, listeners: cellStateChangeListeners});
-    }
     if (data.state) {
       visibleField.setState(data.state);
+    }
+    if (data.mines) {
+      visibleField.placeMines(data.mines, {updateCount: true, showMines: true, listeners: cellStateChangeListeners});
     }
     notifyGameStateChangeListeners(state, previous_state);
     notifyRemainingMineCountListeners(visibleField.remainingMineCount(), previousRemainingMines);

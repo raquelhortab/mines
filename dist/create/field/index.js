@@ -36,19 +36,12 @@ exports.default = function (dimensions, mineCount, opts) {
   var totalMines = mineCount || 0;
   var total_cells = row_count * column_count;
 
-  var updateState = function updateState(showMines, listeners) {
-    console.log('updateState showMines', showMines);
+  var updateState = function updateState() {
     (0, _lodash.times)(row_count, function (row_index) {
       var row = [];
       _state.push(row);
       (0, _lodash.times)(column_count, function (column_index) {
-        console.log('updateState isMine', isMine([row_index, column_index]));
-        if (showMines && isMine([row_index, column_index])) {
-          row.push(_cellStates2.default.MINE);
-          setCellState([row_index, column_index], _cellStates2.default.MINE, listeners);
-        } else {
-          row.push(_cellStates2.default.UNKNOWN);
-        }
+        row.push(_cellStates2.default.UNKNOWN);
       });
     });
   };
@@ -287,7 +280,11 @@ exports.default = function (dimensions, mineCount, opts) {
     }
     mines = m;
     if (updateCount) totalMines = mines.length;
-    updateState(showMines, opts.listeners);
+    if (showMines) {
+      mines.forEach(function (m) {
+        setCellState(m, _cellStates2.default.MINE, opts.listeners);
+      });
+    }
   };
 
   var allCellsWithoutMinesRevealed = function allCellsWithoutMinesRevealed() {

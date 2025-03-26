@@ -13,19 +13,12 @@ export default (dimensions, mineCount, opts) => {
   let totalMines = mineCount || 0;
   const total_cells = row_count * column_count;
 
-  const updateState = (showMines, listeners) => {
-    console.log('updateState showMines', showMines);
+  const updateState = () => {
     times(row_count, (row_index) => {
       const row = [];
       state.push(row);
       times(column_count, (column_index) => {
-        console.log('updateState isMine', isMine([row_index, column_index]));
-        if (showMines && isMine([row_index, column_index])) {
-          row.push(cellStates.MINE);
-          setCellState([row_index, column_index], cellStates.MINE, listeners);
-        } else {
-          row.push(cellStates.UNKNOWN);
-        }
+        row.push(cellStates.UNKNOWN);
       });
     });
   };
@@ -194,7 +187,7 @@ export default (dimensions, mineCount, opts) => {
 
   const setState = (newState) => {
     state = newState;
-  }
+  };
 
   // mines is an array of positions [row, col]
   const placeMines = (m, opts) => {
@@ -208,8 +201,11 @@ export default (dimensions, mineCount, opts) => {
     }
     mines = m;
     if (updateCount) totalMines = mines.length;
-    updateState(showMines, opts.listeners);
-
+    if (showMines) {
+      mines.forEach((m) => {
+        setCellState(m, cellStates.MINE, opts.listeners);
+      });
+    }
   };
 
   const allCellsWithoutMinesRevealed = () => revealedCells() === (total_cells - totalMines);
