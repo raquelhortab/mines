@@ -60,6 +60,7 @@ export default (options) => {
     state = gameStates.NOT_STARTED;
     timeStarted = null;
     elapsedTime = 0;
+    console.log('reset', config.editable);
     const opts = config.editable ? {mine_count: 0} : {};
     visibleField.reset(cellStateChangeListeners, opts);
     if (intervalToken) {
