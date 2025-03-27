@@ -40,8 +40,8 @@ export default (options) => {
 
   const decrypt = (encryptedData) => {
 
-    const key = Buffer.from("0123456789abcdef0123456789abcdef"); // 32-byte key
-    const iv = Buffer.from("abcdef0123456789"); // 16-byte IV
+    const key = Buffer.from("1234567890abcdef1234567890abcdef"); // 32-byte key
+    const iv = Buffer.from("abcdef1234567890"); // 16-byte IV
 
     const encryptedBuffer = Buffer.from(encryptedData, 'base64');
 

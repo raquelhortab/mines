@@ -76,8 +76,8 @@ exports.default = function (options) {
 
   var decrypt = function decrypt(encryptedData) {
 
-    var key = _buffer.Buffer.from("0123456789abcdef0123456789abcdef"); // 32-byte key
-    var iv = _buffer.Buffer.from("abcdef0123456789"); // 16-byte IV
+    var key = _buffer.Buffer.from("1234567890abcdef1234567890abcdef"); // 32-byte key
+    var iv = _buffer.Buffer.from("abcdef1234567890"); // 16-byte IV
 
     var encryptedBuffer = _buffer.Buffer.from(encryptedData, 'base64');
 
