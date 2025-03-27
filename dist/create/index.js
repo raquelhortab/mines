@@ -97,7 +97,7 @@ exports.default = function (options) {
       _visibleField.setState(data.state, cellStateChangeListeners);
     }
     if (data.mines) {
-      _visibleField.placeMines(data.mines, { updateCount: true, showMines: true, listeners: cellStateChangeListeners });
+      _visibleField.placeMines(data.mines, { updateCount: true, showMines: !encrypted, listeners: cellStateChangeListeners });
     }
     notifyGameStateChangeListeners(_state, previous_state);
     notifyRemainingMineCountListeners(_visibleField.remainingMineCount(), previousRemainingMines);
