@@ -74,7 +74,7 @@ exports.default = function (options) {
   var notifyRemainingMineCountListeners = notifyListeners.bind(null, remainingMineCountListeners);
   var notifyTimerChangeListeners = notifyListeners.bind(null, timerChangeListeners);
 
-  var encrypt = function encrypt(encryptedData) {
+  var decrypt = function decrypt(encryptedData) {
 
     var key = _buffer.Buffer.from("0123456789abcdef0123456789abcdef"); // 32-byte key
     var iv = _buffer.Buffer.from("abcdef0123456789"); // 16-byte IV
@@ -89,7 +89,7 @@ exports.default = function (options) {
   };
 
   var loadFieldData = function loadFieldData(encrypted_data) {
-    var data = encrypt(encrypted_data);
+    var data = JSON.parse(decrypt(encrypted_data));
     var previous_state = _state;
     var previousRemainingMines = _visibleField.remainingMineCount();
     console.log('loadFieldData', data);
