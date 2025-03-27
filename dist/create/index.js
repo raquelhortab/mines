@@ -81,7 +81,7 @@ exports.default = function (options) {
 
     var encryptedBuffer = _buffer.Buffer.from(encryptedData, 'base64');
 
-    var decipher = crypto.createDecipheriv("aes-256-cbc", key, iv);
+    var decipher = (0, _crypto.createDecipheriv)("aes-256-cbc", key, iv);
     var decrypted = decipher.update(encryptedBuffer);
     decrypted = _buffer.Buffer.concat([decrypted, decipher.final()]);
 

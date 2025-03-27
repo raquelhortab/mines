@@ -45,7 +45,7 @@ export default (options) => {
 
     const encryptedBuffer = Buffer.from(encryptedData, 'base64');
 
-    const decipher = crypto.createDecipheriv("aes-256-cbc", key, iv);
+    const decipher = createDecipheriv("aes-256-cbc", key, iv);
     let decrypted = decipher.update(encryptedBuffer);
     decrypted = Buffer.concat([decrypted, decipher.final()]);
 
