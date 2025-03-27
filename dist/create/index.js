@@ -89,7 +89,7 @@ exports.default = function (options) {
   };
 
   var loadFieldData = function loadFieldData(_data, encrypted) {
-    var data = encrypted ? JSON.parsedecrypt(_data) : _data;
+    var data = encrypted ? JSON.parse(decrypt(_data)) : _data;
     var previous_state = _state;
     var previousRemainingMines = _visibleField.remainingMineCount();
     console.log('loadFieldData', data);

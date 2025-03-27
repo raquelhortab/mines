@@ -53,7 +53,7 @@ export default (options) => {
   };
 
   const loadFieldData = (_data, encrypted) => {
-    const data = encrypted ? JSON.parsedecrypt(_data) : _data;
+    const data = encrypted ? JSON.parse(decrypt(_data)) : _data;
     const previous_state = state;
     const previousRemainingMines = visibleField.remainingMineCount();
     console.log('loadFieldData', data);
