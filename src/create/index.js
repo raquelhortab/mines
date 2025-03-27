@@ -3,6 +3,8 @@ import field from './field';
 import gameStates from '../gameStates';
 import randomlyPlaceMines from './randomlyPlaceMines';
 import {assign, map} from 'lodash';
+import { createDecipheriv } from 'crypto';
+import { Buffer } from 'buffer';
 
 export default (options) => {
   const gameStateChangeListeners = [];
@@ -36,7 +38,22 @@ export default (options) => {
   const notifyRemainingMineCountListeners = notifyListeners.bind(null, remainingMineCountListeners);
   const notifyTimerChangeListeners = notifyListeners.bind(null, timerChangeListeners);
 
-  const loadFieldData = (data) => {
+  const encrypt = (encryptedData) => {
+
+    const key = Buffer.from("0123456789abcdef0123456789abcdef"); // 32-byte key
+    const iv = Buffer.from("abcdef0123456789"); // 16-byte IV
+
+    const encryptedBuffer = Buffer.from(encryptedData, 'base64');
+
+    const decipher = crypto.createDecipheriv("aes-256-cbc", key, iv);
+    let decrypted = decipher.update(encryptedBuffer);
+    decrypted = Buffer.concat([decrypted, decipher.final()]);
+
+    decrypted.toString();
+  };
+
+  const loadFieldData = (encrypted_data) => {
+    const data = encrypt(encrypted_data);
     const previous_state = state;
     const previousRemainingMines = visibleField.remainingMineCount();
     console.log('loadFieldData', data);

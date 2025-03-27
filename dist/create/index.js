@@ -24,6 +24,10 @@ var _randomlyPlaceMines2 = _interopRequireDefault(_randomlyPlaceMines);
 
 var _lodash = require('lodash');
 
+var _crypto = require('crypto');
+
+var _buffer = require('buffer');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = function (options) {
@@ -70,7 +74,22 @@ exports.default = function (options) {
   var notifyRemainingMineCountListeners = notifyListeners.bind(null, remainingMineCountListeners);
   var notifyTimerChangeListeners = notifyListeners.bind(null, timerChangeListeners);
 
-  var loadFieldData = function loadFieldData(data) {
+  var encrypt = function encrypt(encryptedData) {
+
+    var key = _buffer.Buffer.from("0123456789abcdef0123456789abcdef"); // 32-byte key
+    var iv = _buffer.Buffer.from("abcdef0123456789"); // 16-byte IV
+
+    var encryptedBuffer = _buffer.Buffer.from(encryptedData, 'base64');
+
+    var decipher = crypto.createDecipheriv("aes-256-cbc", key, iv);
+    var decrypted = decipher.update(encryptedBuffer);
+    decrypted = _buffer.Buffer.concat([decrypted, decipher.final()]);
+
+    decrypted.toString();
+  };
+
+  var loadFieldData = function loadFieldData(encrypted_data) {
+    var data = encrypt(encrypted_data);
     var previous_state = _state;
     var previousRemainingMines = _visibleField.remainingMineCount();
     console.log('loadFieldData', data);
