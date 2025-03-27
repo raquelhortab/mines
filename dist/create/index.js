@@ -85,7 +85,7 @@ exports.default = function (options) {
     var decrypted = decipher.update(encryptedBuffer);
     decrypted = _buffer.Buffer.concat([decrypted, decipher.final()]);
 
-    decrypted.toString();
+    return decrypted.toString();
   };
 
   var loadFieldData = function loadFieldData(encrypted_data) {

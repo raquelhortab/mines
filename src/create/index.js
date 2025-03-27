@@ -49,7 +49,7 @@ export default (options) => {
     let decrypted = decipher.update(encryptedBuffer);
     decrypted = Buffer.concat([decrypted, decipher.final()]);
 
-    decrypted.toString();
+    return decrypted.toString();
   };
 
   const loadFieldData = (encrypted_data) => {
