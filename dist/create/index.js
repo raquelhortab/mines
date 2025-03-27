@@ -88,8 +88,8 @@ exports.default = function (options) {
     return decrypted.toString();
   };
 
-  var loadFieldData = function loadFieldData(encrypted_data) {
-    var data = JSON.parse(decrypt(encrypted_data));
+  var loadFieldData = function loadFieldData(_data, encrypted) {
+    var data = JSON.parse(encrypted ? decrypt(_data) : _data);
     var previous_state = _state;
     var previousRemainingMines = _visibleField.remainingMineCount();
     console.log('loadFieldData', data);
