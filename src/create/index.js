@@ -3,7 +3,7 @@ import field from './field';
 import gameStates from '../gameStates';
 import randomlyPlaceMines from './randomlyPlaceMines';
 import {assign, map} from 'lodash';
-import { createDecipheriv } from 'crypto';
+import { createDecipheriv, createCipheriv } from 'crypto';
 import { Buffer } from 'buffer';
 
 export default (options) => {
@@ -52,11 +52,21 @@ export default (options) => {
     return decrypted.toString();
   };
 
+  const encrypt = (data) => {
+    const key = Buffer.from("1234567890abcdef1234567890abcdef"); // 32-byte key
+    const iv = Buffer.from("abcdef1234567890"); // 16-byte IV
+
+    const cipher = createCipheriv("aes-256-cbc", key, iv);
+    let encrypted = cipher.update(data, "utf-8");
+    encrypted = Buffer.concat([encrypted, cipher.final()]);
+
+    return encrypted.toString("base64"); // Base64 encode for safe transfer
+  };
+
   const loadFieldData = (_data, encrypted) => {
     const data = encrypted ? JSON.parse(decrypt(_data)) : _data;
     const previous_state = state;
     const previousRemainingMines = visibleField.remainingMineCount();
-    console.log('loadFieldData', data);
     if (data.state) {
       visibleField.setState(data.state, cellStateChangeListeners);
     }
@@ -68,7 +78,7 @@ export default (options) => {
     notifyRemainingMineCountListeners(visibleField.remainingMineCount(), previousRemainingMines);
   };
 
-  const getFieldData = (data) => {
+  const getFieldData = () => {
     return {
       mines: visibleField.getMines(),
       state: visibleField.publicState()

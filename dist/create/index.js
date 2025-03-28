@@ -88,11 +88,21 @@ exports.default = function (options) {
     return decrypted.toString();
   };
 
+  var encrypt = function encrypt(data) {
+    var key = _buffer.Buffer.from("1234567890abcdef1234567890abcdef"); // 32-byte key
+    var iv = _buffer.Buffer.from("abcdef1234567890"); // 16-byte IV
+
+    var cipher = (0, _crypto.createCipheriv)("aes-256-cbc", key, iv);
+    var encrypted = cipher.update(data, "utf-8");
+    encrypted = _buffer.Buffer.concat([encrypted, cipher.final()]);
+
+    return encrypted.toString("base64"); // Base64 encode for safe transfer
+  };
+
   var loadFieldData = function loadFieldData(_data, encrypted) {
     var data = encrypted ? JSON.parse(decrypt(_data)) : _data;
     var previous_state = _state;
     var previousRemainingMines = _visibleField.remainingMineCount();
-    console.log('loadFieldData', data);
     if (data.state) {
       _visibleField.setState(data.state, cellStateChangeListeners);
     }
@@ -104,7 +114,7 @@ exports.default = function (options) {
     notifyRemainingMineCountListeners(_visibleField.remainingMineCount(), previousRemainingMines);
   };
 
-  var getFieldData = function getFieldData(data) {
+  var getFieldData = function getFieldData() {
     return {
       mines: _visibleField.getMines(),
       state: _visibleField.publicState()
