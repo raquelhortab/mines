@@ -213,7 +213,8 @@ exports.default = function (options) {
     return false;
   };
 
-  return (0, _lodash.assign)(config, { finished: finished, mark: mark, chord: chord, reveal: reveal, onGameStateChange: onGameStateChange, onCellStateChange: onCellStateChange, onRemainingMineCountChange: onRemainingMineCountChange, onTimerChange: onTimerChange, reset: reset, toggleMine: toggleMine, loadFieldData: loadFieldData, getFieldData: getFieldData,
+  return (0, _lodash.assign)(config, { finished: finished, mark: mark, chord: chord, reveal: reveal, onGameStateChange: onGameStateChange, onCellStateChange: onCellStateChange, onRemainingMineCountChange: onRemainingMineCountChange, onTimerChange: onTimerChange,
+    reset: reset, toggleMine: toggleMine, loadFieldData: loadFieldData, getFieldData: getFieldData, encrypt: encrypt,
     state: function state() {
       return _state;
     },

@@ -168,7 +168,8 @@ export default (options) => {
     return false;
   };
 
-  return assign(config, {finished, mark, chord, reveal, onGameStateChange, onCellStateChange, onRemainingMineCountChange, onTimerChange, reset, toggleMine, loadFieldData, getFieldData,
+  return assign(config, {finished, mark, chord, reveal, onGameStateChange, onCellStateChange, onRemainingMineCountChange, onTimerChange,
+    reset, toggleMine, loadFieldData, getFieldData, encrypt,
     state: () => state,
     cellState: (cell) => visibleField.cellState(cell),
     remainingMineCount: () => visibleField.remainingMineCount(),
