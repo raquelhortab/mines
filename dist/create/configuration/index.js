@@ -72,6 +72,8 @@ var configuration = function configuration(options) {
     result.mines = mines;
   }
 
+  result.modern = options.modern;
+
   return result;
 };
 
