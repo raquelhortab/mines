@@ -74,6 +74,7 @@ export default (options) => {
       visibleField.placeMines(data.mines, {updateCount: true, showMines: !encrypted, listeners: cellStateChangeListeners});
       config.mine_count = data.mines.length;
     }
+    startTimer();
     notifyGameStateChangeListeners(state, previous_state);
     notifyRemainingMineCountListeners(visibleField.remainingMineCount(), previousRemainingMines);
   };
