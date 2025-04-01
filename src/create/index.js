@@ -5,6 +5,7 @@ import randomlyPlaceMines from './randomlyPlaceMines';
 import {assign, map} from 'lodash';
 import { createDecipheriv, createCipheriv } from 'crypto';
 import { Buffer } from 'buffer';
+import GameStates from "../gameStates";
 
 export default (options) => {
   const gameStateChangeListeners = [];
@@ -74,7 +75,9 @@ export default (options) => {
       visibleField.placeMines(data.mines, {updateCount: true, showMines: !encrypted, listeners: cellStateChangeListeners});
       config.mine_count = data.mines.length;
     }
+    state = GameStates.STARTED;
     startTimer();
+    notifyTimerChangeListeners(0, 0);
     notifyGameStateChangeListeners(state, previous_state);
     notifyRemainingMineCountListeners(visibleField.remainingMineCount(), previousRemainingMines);
   };
