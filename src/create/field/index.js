@@ -8,6 +8,7 @@ import {update} from "lodash/object";
 export default (dimensions, mineCount, opts) => {
   let additionalOptions = opts || {};
   const [row_count, column_count] = dimensions;
+  console.log("dimensions in mines js", row_count, column_count);
   let state = additionalOptions.initialState || [];
   let mines = null;
   let totalMines = mineCount || 0;

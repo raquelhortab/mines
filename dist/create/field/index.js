@@ -31,6 +31,7 @@ exports.default = function (dimensions, mineCount, opts) {
       row_count = _dimensions[0],
       column_count = _dimensions[1];
 
+  console.log("dimensions in mines js", row_count, column_count);
   var _state = additionalOptions.initialState || [];
   var mines = null;
   var totalMines = mineCount || 0;
