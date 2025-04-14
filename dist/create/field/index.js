@@ -31,7 +31,6 @@ exports.default = function (dimensions, mineCount, opts) {
       row_count = _dimensions[0],
       column_count = _dimensions[1];
 
-  console.log("dimensions in mines js", row_count, column_count);
   var _state = additionalOptions.initialState || [];
   var mines = null;
   var totalMines = mineCount || 0;
@@ -266,7 +265,6 @@ exports.default = function (dimensions, mineCount, opts) {
   };
 
   var setState = function setState(newState, listeners) {
-    console.log('new state ', newState);
     (0, _lodash.times)(row_count, function (row_index) {
       (0, _lodash.times)(column_count, function (column_index) {
         setCellState([row_index, column_index], newState[row_index][column_index], listeners);
@@ -276,11 +274,9 @@ exports.default = function (dimensions, mineCount, opts) {
 
   // mines is an array of positions [row, col]
   var placeMines = function placeMines(m, opts) {
-    console.log('placeMines');
     var options = opts || {};
     var updateCount = options.updateCount || false;
     var showMines = options.showMines || false;
-    console.log('m', m);
     if (m.length !== totalMines && !updateCount) {
       throw Error('The number of mines being placed does not match config');
     }

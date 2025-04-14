@@ -8,7 +8,6 @@ import {update} from "lodash/object";
 export default (dimensions, mineCount, opts) => {
   let additionalOptions = opts || {};
   const [row_count, column_count] = dimensions;
-  console.log("dimensions in mines js", row_count, column_count);
   let state = additionalOptions.initialState || [];
   let mines = null;
   let totalMines = mineCount || 0;
@@ -187,7 +186,6 @@ export default (dimensions, mineCount, opts) => {
   };
 
   const setState = (newState, listeners) => {
-    console.log('new state ', newState);
     times(row_count, (row_index) => {
       times(column_count, (column_index) => {
         setCellState([row_index, column_index], newState[row_index][column_index], listeners);
@@ -197,11 +195,9 @@ export default (dimensions, mineCount, opts) => {
 
   // mines is an array of positions [row, col]
   const placeMines = (m, opts) => {
-    console.log('placeMines');
     let options = opts || {};
     const updateCount = options.updateCount || false;
     const showMines = options.showMines || false;
-    console.log('m', m);
     if (m.length !== totalMines && !updateCount) {
       throw Error('The number of mines being placed does not match config');
     }
